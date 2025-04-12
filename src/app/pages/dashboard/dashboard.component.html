@@ -18,47 +18,49 @@
   </div>
 </div>
 
-<!-- Grafik Alanı -->
-<!-- Grafik Alanı -->
-<!-- Grafik Alanı -->
-<div class="bg-white mt-8 p-6 rounded-xl shadow border performance-card">
-  <h2 class="text-lg font-semibold mb-4">📈 Aylık Takım Performansı</h2>
-  <p-chart type="line"
-           [data]="performanceData"
-           [options]="chartOptions"
-           class="performance-chart">
-  </p-chart>
-</div>
 
 
-<!-- Lig Puan Durumu Tablosu -->
-<div class="bg-white mt-8 p-6 rounded-xl shadow border">
-  <h2 class="text-lg font-semibold mb-4">🏆 Lig Puan Durumu</h2>
-  <table class="min-w-full table-auto text-left">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="px-4 py-2 text-sm text-gray-700">Takım Adı</th>
-        <th class="px-4 py-2 text-sm text-gray-700">Oynanan Maçlar</th>
-        <th class="px-4 py-2 text-sm text-gray-700">Galibiyet</th>
-        <th class="px-4 py-2 text-sm text-gray-700">Beraberlik</th>
-        <th class="px-4 py-2 text-sm text-gray-700">Mağlubiyet</th>
-        <th class="px-4 py-2 text-sm text-gray-700">Puan</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let team of teams">
-        <td class="px-4 py-2">{{ team.name }}</td>
-        <td class="px-4 py-2">{{ team.matchesPlayed }}</td>
-        <td class="px-4 py-2">{{ team.wins }}</td>
-        <td class="px-4 py-2">{{ team.draws }}</td>
-        <td class="px-4 py-2">{{ team.losses }}</td>
-        <td class="px-4 py-2">{{ team.points }}</td>
-      </tr>
-      <tr *ngIf="teams.length === 0">
-        <td colspan="6" class="text-center py-4 text-gray-500">Hiçbir takım verisi mevcut değil.</td>
-      </tr>
-    </tbody>
-  </table>
+<!-- Grafik ve Puan Durumu Alanı -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+  <!-- Grafik Alanı -->
+  <div class="bg-white p-6 rounded-xl shadow border">
+    <h2 class="text-lg font-semibold mb-4">📈 Aylık Takım Performansı</h2>
+    <p-chart type="line"
+             [data]="performanceData"
+             [options]="chartOptions"
+             class="performance-chart">
+    </p-chart>
+  </div>
+
+  <!-- Lig Puan Durumu Tablosu -->
+  <div class="bg-white p-6 rounded-xl shadow border">
+    <h2 class="text-lg font-semibold mb-4">🏆 Lig Puan Durumu</h2>
+    <table class="min-w-full table-auto text-left">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-sm text-gray-700">Takım Adı</th>
+          <th class="px-4 py-2 text-sm text-gray-700">Oynanan Maçlar</th>
+          <th class="px-4 py-2 text-sm text-gray-700">Galibiyet</th>
+          <th class="px-4 py-2 text-sm text-gray-700">Beraberlik</th>
+          <th class="px-4 py-2 text-sm text-gray-700">Mağlubiyet</th>
+          <th class="px-4 py-2 text-sm text-gray-700">Puan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let team of teams">
+          <td class="px-4 py-2">{{ team.name }}</td>
+          <td class="px-4 py-2">{{ team.matchesPlayed }}</td>
+          <td class="px-4 py-2">{{ team.wins }}</td>
+          <td class="px-4 py-2">{{ team.draws }}</td>
+          <td class="px-4 py-2">{{ team.losses }}</td>
+          <td class="px-4 py-2">{{ team.points }}</td>
+        </tr>
+        <tr *ngIf="teams.length === 0">
+          <td colspan="6" class="text-center py-4 text-gray-500">Hiçbir takım verisi mevcut değil.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <!-- Takım Performansı Tablosu -->

@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
+import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart'; 
 import { CommonModule } from '@angular/common';
-import { ChartModule } from 'primeng/chart';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ChartModule],
+  imports: [
+    CommonModule,
+    CardModule,     
+    ChartModule      
+  ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })

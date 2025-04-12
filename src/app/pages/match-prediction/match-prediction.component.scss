@@ -1,0 +1,79 @@
+.personnel-card {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #1f2937;
+  }
+
+  .table-search {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    input {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+    }
+  }
+
+  .person-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+    }
+
+    .name {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .phone {
+      font-size: 12px;
+      color: #6b7280;
+    }
+  }
+
+  .footer {
+    text-align: left;
+    font-size: 14px;
+    padding-top: 10px;
+    color: #374151;
+  }
+
+  ::ng-deep .p-paginator {
+    border: none;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 20%;
+    height: 20px;
+
+    ::ng-deep canvas {
+      width: 50% !important;
+      height: 50% !important;
+    }
+  }
+
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+}

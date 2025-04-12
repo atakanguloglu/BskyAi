@@ -1,0 +1,26 @@
+.taktik-tahtasi-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.canvas-wrapper {
+  width: 100%;
+  max-width: 1400px; // isteğe göre 1200px'e çıkarılabilir
+  height: 700px;
+  margin-bottom: 1rem;
+
+  canvas {
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/Tahta.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    cursor: crosshair;
+  }
+}

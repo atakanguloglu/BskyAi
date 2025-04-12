@@ -1,1 +1,17 @@
-<p>taktik-tahtasi works!</p>
+<div class="taktik-tahtasi-container">
+  <div class="canvas-wrapper">
+    <canvas #canvas width="1400" height="700"></canvas>
+  </div>
+
+  <div class="tools flex gap-2 flex-wrap justify-center mb-4">
+    <button (click)="changeColor('red')">🔴</button>
+    <button (click)="changeColor('blue')">🔵</button>
+    <button (click)="undo()">↩️ Geri Al</button>
+    <button (click)="clear()">🗑️ Temizle</button>
+    <button (click)="save()">💾 Kaydet</button>
+  </div>
+
+  <select [(ngModel)]="selectedTactic" (change)="loadTactic(selectedTactic)">
+    <option *ngFor="let tactic of savedTactics" [value]="tactic.name">{{ tactic.name }}</option>
+  </select>
+</div>

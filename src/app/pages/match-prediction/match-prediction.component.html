@@ -1,1 +1,70 @@
-<p>match-prediction works!</p>
+<!-- Maç Sonucu Olasılıkları ve Rakip Tehlikeleri -->
+<div class="chart-grid mb-6">
+  <p-card header="Maç Sonucu Olasılıkları" class="shadow-md rounded-xl p-4">
+    <div class="chart-container max-w-[400px] mx-auto">
+      <p-chart type="pie" [data]="outcomeChartData"></p-chart>
+    </div>
+  </p-card>
+
+  <p-card header="Rakip Tehlikeleri" class="shadow-md rounded-xl p-4">
+    <ul class="text-sm list-disc pl-5">
+      <li *ngFor="let threat of opponentThreats">
+        <strong>{{ threat.name }}:</strong> {{ threat.details }}
+      </li>
+    </ul>
+  </p-card>
+</div>
+
+<!-- Taktik ve Senaryo Stratejileri -->
+<p-card header="Taktik Önerileri" class="shadow-md rounded-xl p-4 mb-6">
+  <ul class="list-disc pl-5 text-sm">
+    <li><strong>Diziliş:</strong> {{ tactics.formation }}</li>
+    <li><strong>Pres:</strong> {{ tactics.pressing }}</li>
+    <li><strong>Defans:</strong> {{ tactics.defense }}</li>
+    <li><strong>Hücum:</strong> {{ tactics.attack }}</li>
+  </ul>
+</p-card>
+
+<p-tabView class="mb-6">
+  <p-tabPanel header="İlk Yarı Önde">
+    <ul class="text-sm list-disc pl-5">
+      <li *ngFor="let item of situational.leading">{{ item }}</li>
+    </ul>
+  </p-tabPanel>
+  <p-tabPanel header="İlk Yarı Berabere">
+    <ul class="text-sm list-disc pl-5">
+      <li *ngFor="let item of situational.drawing">{{ item }}</li>
+    </ul>
+  </p-tabPanel>
+  <p-tabPanel header="İlk Yarı Geride">
+    <ul class="text-sm list-disc pl-5">
+      <li *ngFor="let item of situational.trailing">{{ item }}</li>
+    </ul>
+  </p-tabPanel>
+</p-tabView>
+
+
+<p-card header="İstatistik Bar Grafiği" class="shadow-md rounded-xl p-4 w-full lg:basis-1/2">
+  <div class="chart-container max-w-[400px] mx-auto">
+    <p-chart type="bar" [data]="statBarData"></p-chart>
+  </div>
+</p-card>
+
+
+<!-- İstatistiksel Grafikler: Topla Oynama + Bar Grafik -->
+<div class="flex flex-col lg:flex-row gap-6 mb-6">
+  <p-card header="Topla Oynama" class="shadow-md rounded-xl p-4 w-full lg:basis-1/2">
+    <div class="chart-container max-w-[400px] mx-auto">
+      <p-chart type="doughnut" [data]="possessionData"></p-chart>
+    </div>
+  </p-card>
+  <!-- Radar Grafiği tek satırda -->
+  <p-card header="Takım Profili (Radar Grafiği)" class="shadow-md rounded-xl p-4 w-full lg:basis-1/2">
+    <div class="chart-container max-w-[400px] mx-auto">
+      <p-chart type="radar" [data]="radarData"></p-chart>
+    </div>
+  </p-card>
+
+</div>
+
+
