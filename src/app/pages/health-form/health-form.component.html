@@ -1,0 +1,97 @@
+<!-- Genel Sağlık Durumu Tablosu (Tüm Oyuncular) -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🏥 Tüm Oyuncuların Sağlık Durumu</h2>
+  <table class="min-w-full table-auto text-left">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="px-4 py-2 text-sm text-gray-700">Oyuncu Adı</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Sağlık Durumu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Son Antrenman Durumu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Detaylar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let player of players">
+        <td class="px-4 py-2">{{ player.name }}</td>
+        <!-- Conditional class for health status -->
+        <td class="px-4 py-2" [ngClass]="{
+          'text-green-600': player.healthStatus === 'İyi',
+          'text-red-600': player.healthStatus === 'Yaralı',
+          'text-yellow-600': player.healthStatus === 'İyileşiyor'
+        }">
+          {{ player.healthStatus }}
+        </td>
+        <td class="px-4 py-2">{{ player.lastTrainingStatus }}</td>
+        <td class="px-4 py-2">
+          <button (click)="selectPlayer(player)" class="text-blue-500 hover:underline">Detaylar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Seçilen Oyuncu Detayları -->
+<div *ngIf="selectedPlayer">
+  <div class="bg-white mt-8 p-6 rounded-xl shadow border">
+    <h3 class="text-lg font-semibold mb-4">📋 Sağlık Detayları: {{ selectedPlayer.name }}</h3>
+
+    <!-- Genel Sağlık Durumu -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="p-4">
+        <h4 class="font-medium text-gray-500">Genel Durum</h4>
+        <!-- Conditional class for health status -->
+        <p class="font-semibold" [ngClass]="{
+          'text-green-600': selectedPlayer.healthStatus === 'İyi',
+          'text-red-600': selectedPlayer.healthStatus === 'Yaralı',
+          'text-yellow-600': selectedPlayer.healthStatus === 'İyileşiyor'
+        }">
+          {{ selectedPlayer.healthStatus }}
+        </p>
+      </div>
+      <div class="p-4">
+        <h4 class="font-medium text-gray-500">Son Antrenman Durumu</h4>
+        <p class="font-semibold">{{ selectedPlayer.lastTrainingStatus }}</p>
+      </div>
+    </div>
+
+    <!-- Sakatlık Durumu -->
+    <div class="p-6 bg-gray-100 mt-6 rounded-xl">
+      <h3 class="text-lg font-medium mb-4">📋 Sakatlık Durumu ve Yorumlar</h3>
+      <table class="min-w-full table-auto text-left">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-2 text-sm text-gray-700">Sakatlık Türü</th>
+            <th class="px-4 py-2 text-sm text-gray-700">Başlangıç Tarihi</th>
+            <th class="px-4 py-2 text-sm text-gray-700">İyileşme Durumu</th>
+            <th class="px-4 py-2 text-sm text-gray-700">Doktor Yorumları</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let injury of selectedPlayer.injuries">
+            <td class="px-4 py-2">{{ injury.type }}</td>
+            <td class="px-4 py-2">{{ injury.startDate | date }}</td>
+            <td class="px-4 py-2">{{ injury.recoveryStatus }}%</td>
+            <td class="px-4 py-2">{{ injury.doctorNotes }}</td>
+          </tr>
+          <tr *ngIf="selectedPlayer.injuries.length === 0">
+            <td colspan="4" class="text-center py-4 text-gray-500">Hiçbir sakatlık verisi mevcut değil.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tedavi Planı ve İyileşme -->
+    <div class="bg-white mt-8 p-6 rounded-xl shadow border">
+      <h3 class="text-lg font-medium mb-4">💊 Tedavi Planı ve İyileşme</h3>
+
+      <!-- Sağ tarafa hizalanan içerik -->
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="font-semibold">{{ selectedPlayer.treatmentPlan[0].name }} - <span class="text-sm text-gray-500">{{ selectedPlayer.treatmentPlan[0].details }}</span></p>
+          <p class="text-sm text-gray-700">Planlanan Başlangıç: {{ selectedPlayer.treatmentPlan[0].startDate | date }}</p>
+        </div>
+        <button class="mt-4 text-blue-500 hover:underline">Genel Detaylar</button>
+      </div>
+    </div>
+  </div>
+</div>

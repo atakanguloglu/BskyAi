@@ -1,0 +1,28 @@
+<!-- Kadro Önerisi Component - Kartlar -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Toplam Kadro</h2>
+    <p class="text-2xl font-bold text-blue-600 mt-1">{{ toplamKadro }}</p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Uyumlu Oyuncular</h2>
+    <p class="text-2xl font-bold text-green-600 mt-1">{{ uyumluOyuncular }}</p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Önerilen Oyuncular</h2>
+    <p class="text-2xl font-bold text-purple-600 mt-1">{{ onerilenOyuncular }}</p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Takım Durumu</h2>
+    <p class="text-2xl font-bold text-orange-500 mt-1">{{ takimDurumu }}</p>
+  </div>
+</div>
+
+<!-- Takım Performansı Grafik -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">📈 Kadro Performansı</h2>
+  <p-chart type="line" [data]="performanceData" [options]="chartOptions" style="height: 300px;"></p-chart>
+</div>

@@ -1,0 +1,161 @@
+<!-- Kartlar -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Toplam Oyuncu</h2>
+    <p class="text-2xl font-bold text-blue-600 mt-1">32</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Kadro Uyum Puanı</h2>
+    <p class="text-2xl font-bold text-green-600 mt-1">92%</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Önerilen Oyuncular</h2>
+    <p class="text-2xl font-bold text-purple-600 mt-1">5</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Formda Oyuncular</h2>
+    <p class="text-2xl font-bold text-orange-500 mt-1">7</p>
+  </div>
+</div>
+
+<!-- Grafik Alanı -->
+<!-- Grafik Alanı -->
+<!-- Grafik Alanı -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border performance-card">
+  <h2 class="text-lg font-semibold mb-4">📈 Aylık Takım Performansı</h2>
+  <p-chart type="line"
+           [data]="performanceData"
+           [options]="chartOptions"
+           class="performance-chart">
+  </p-chart>
+</div>
+
+
+<!-- Lig Puan Durumu Tablosu -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🏆 Lig Puan Durumu</h2>
+  <table class="min-w-full table-auto text-left">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 text-sm text-gray-700">Takım Adı</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Oynanan Maçlar</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Galibiyet</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Beraberlik</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Mağlubiyet</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Puan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let team of teams">
+        <td class="px-4 py-2">{{ team.name }}</td>
+        <td class="px-4 py-2">{{ team.matchesPlayed }}</td>
+        <td class="px-4 py-2">{{ team.wins }}</td>
+        <td class="px-4 py-2">{{ team.draws }}</td>
+        <td class="px-4 py-2">{{ team.losses }}</td>
+        <td class="px-4 py-2">{{ team.points }}</td>
+      </tr>
+      <tr *ngIf="teams.length === 0">
+        <td colspan="6" class="text-center py-4 text-gray-500">Hiçbir takım verisi mevcut değil.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Takım Performansı Tablosu -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🏆 Takım Performansı</h2>
+  <table class="min-w-full table-auto text-left">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 text-sm text-gray-700">Ay</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Performans</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Maç Galibiyeti</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Kadro Uyumu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Antrenman Skoru</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-4 py-2">Ocak</td>
+        <td class="px-4 py-2">78</td>
+        <td class="px-4 py-2">5/10</td>
+        <td class="px-4 py-2">85%</td>
+        <td class="px-4 py-2">90</td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2">Şubat</td>
+        <td class="px-4 py-2">82</td>
+        <td class="px-4 py-2">6/10</td>
+        <td class="px-4 py-2">87%</td>
+        <td class="px-4 py-2">92</td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2">Mart</td>
+        <td class="px-4 py-2">85</td>
+        <td class="px-4 py-2">7/10</td>
+        <td class="px-4 py-2">88%</td>
+        <td class="px-4 py-2">95</td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2">Nisan</td>
+        <td class="px-4 py-2">90</td>
+        <td class="px-4 py-2">8/10</td>
+        <td class="px-4 py-2">90%</td>
+        <td class="px-4 py-2">98</td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2">Mayıs</td>
+        <td class="px-4 py-2">86</td>
+        <td class="px-4 py-2">7/10</td>
+        <td class="px-4 py-2">89%</td>
+        <td class="px-4 py-2">92</td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2">Haziran</td>
+        <td class="px-4 py-2">93</td>
+        <td class="px-4 py-2">9/10</td>
+        <td class="px-4 py-2">92%</td>
+        <td class="px-4 py-2">100</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<!-- Oyuncu İstatistikleri Tablosu -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🏆 Oyuncu İstatistikleri</h2>
+  <table class="min-w-full table-auto text-left">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 text-sm text-gray-700">Oyuncu Adı</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Gol</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Asist</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Pozisyon</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Kadro Uyumu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Antrenman Performansı</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Sağlık Durumu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Moral Durumu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Son Antrenman Skoru</th>
+      </tr>
+
+    </thead>
+    <tbody>
+      <tr *ngFor="let player of players">
+        <td class="px-4 py-2">{{ player.name }}</td>
+        <td class="px-4 py-2">{{ player.goals }}</td>
+        <td class="px-4 py-2">{{ player.assists }}</td>
+        <td class="px-4 py-2">{{ player.position }}</td>
+        <td class="px-4 py-2">{{ player.chemistry }}%</td>
+        <td class="px-4 py-2">{{ player.trainingPerformance }}</td>
+        <td class="px-4 py-2">{{ player.healthStatus }}</td>
+        <td class="px-4 py-2">{{ player.moraleStatus }}</td>
+        <td class="px-4 py-2">{{ player.lastTrainingScore }}</td>
+      </tr>
+      <tr *ngIf="players.length === 0">
+        <td colspan="9" class="text-center py-4 text-gray-500">Hiçbir oyuncu verisi mevcut değil.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

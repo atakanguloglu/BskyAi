@@ -1,0 +1,89 @@
+.dizilis-wrapper {
+  padding: 2rem;
+
+  .formation-selector {
+    margin-bottom: 1rem;
+
+    label {
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .football-field {
+    background: linear-gradient(to bottom, #4caf50, #2e7d32);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+
+    .formation-line {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .player-slot {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+
+      .player-card {
+        background: #1976d2;
+        color: white;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        cursor: grab;
+        text-align: center;
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
+    }
+  }
+
+  .bench-section {
+    h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .bench {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .bench-player {
+        background: #64b5f6;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: bold;
+        cursor: grab;
+        transition: background 0.3s;
+
+        &:hover {
+          background: #42a5f5;
+        }
+      }
+    }
+  }
+
+  .team-stats {
+    margin-top: 1.5rem;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+}

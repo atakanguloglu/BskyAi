@@ -1,0 +1,66 @@
+<div class="personnel-card">
+  <h2 class="title">👥 Personel Kadrosu</h2>
+
+  <p-table [value]="filteredPersonnel"
+           [paginator]="true"
+           [rows]="5"
+           [rowsPerPageOptions]="[5, 10, 20]"
+           [globalFilterFields]="['name', 'role']"
+           [responsiveLayout]="'scroll'"
+           class="custom-table">
+
+    <!-- Arama Kutusu -->
+    <ng-template pTemplate="caption">
+      <div class="flex justify-between">
+        <span class="p-input-icon-right w-full max-w-xs">
+          <i class="pi pi-search"></i>
+          <input type="text"
+                 pInputText
+                 placeholder="Kişi ismi ile ara"
+                 (input)="onSearchChange($event)"
+                 class="w-full text-sm" />
+        </span>
+      </div>
+    </ng-template>
+
+
+    <!-- Başlıklar -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Kişi</th>
+        <th>Çalışma Süresi</th>
+        <th>Toplam Bitiş</th>
+        <th>Görev</th>
+        <th>Aksiyonlar</th>
+      </tr>
+    </ng-template>
+
+    <!-- Satırlar -->
+    <ng-template let-person pTemplate="body">
+      <tr>
+        <td>
+          <div class="person-info">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" />
+            <div>
+              <div class="name">{{ person.name }}</div>
+              <div class="phone">+998 (99) 436-46-15</div>
+            </div>
+          </div>
+        </td>
+        <td>{{ person.workingHours }}</td>
+        <td>{{ person.totalFinished }}</td>
+        <td>{{ person.role }}</td>
+        <td>
+          <button pButton icon="pi pi-copy" class="p-button-sm p-button-text"></button>
+          <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text p-button-warning"></button>
+          <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Footer -->
+    <ng-template pTemplate="footer">
+      <div class="footer">Toplam Kişi: {{ filteredPersonnel.length }}</div>
+    </ng-template>
+  </p-table>
+</div>

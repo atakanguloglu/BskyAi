@@ -1,0 +1,101 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+
+  .sidebar {
+    width: 350px;
+    min-width: 350px;
+    max-width: 350px;
+    background-color: #0e1e40;
+    color: #fff;
+    padding: 1rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+
+    @media (max-width: 768px) {
+      width: 240px;
+      min-width: 240px;
+      max-width: 240px;
+    }
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: contain;
+    }
+
+    .club-info {
+      display: flex;
+      flex-direction: column;
+
+      h1 {
+        font-size: 1.1rem;
+        margin: 0;
+      }
+
+      small {
+        font-size: 0.75rem;
+        color: #ccc;
+      }
+    }
+  }
+
+  ::ng-deep .p-panelmenu .p-submenu-list {
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+  }
+
+  ::ng-deep .p-panelmenu .p-panelmenu-header {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  ::ng-deep .p-panelmenu .p-menuitem-link {
+    padding: 1rem 1.25rem !important; /* önceki değerden daha yüksek */
+    font-size: 1rem; /* yazı boyutu istersen büyütülebilir */
+    line-height: 1.5rem; /* yazı yüksekliği */
+    display: flex;
+    align-items: center;
+
+    .pi {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .topbar {
+    background: #fff;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+  }
+}

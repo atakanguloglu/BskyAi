@@ -1,0 +1,45 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Masaüstü için 4 sütun */
+  gap: 1rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr); /* Tablet boyutunda 3 sütun */
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); /* Mobilde 2 sütun */
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr; /* Çok küçük ekranlar için tek sütun */
+  }
+}
+
+.performance-card {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+
+  p-chart {
+    width: 100%; // Grafiği tam genişlikte yapar
+    height: 400px; // Sabit yükseklik verilebilir
+    max-width: 100%; // Genişlik ekranın tamamına yayılır
+    flex: 1; // Genişliğe göre esnek olmasını sağlar
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  .performance-card {
+    height: 200px; /* Küçük ekranlarda daha küçük bir yükseklik */
+  }
+
+  p-chart {
+    max-height: 150px;
+  }
+}

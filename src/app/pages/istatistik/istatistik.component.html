@@ -1,0 +1,77 @@
+<!-- Futbolcu İstatistikleri Başlangıç -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🏆 Futbolcu İstatistikleri</h2>
+
+  <!-- Filtreleme -->
+  <div class="flex justify-between items-center mb-4">
+    <div>
+      <label for="filter">Tarih Aralığı:</label>
+      <select id="filter" class="ml-2">
+        <option value="thisWeek">Bu Hafta</option>
+        <option value="thisMonth">Bu Ay</option>
+        <option value="thisSeason">Bu Sezon</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Futbolcu İstatistik Tablosu -->
+  <table class="min-w-full table-auto text-left">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="px-4 py-2 text-sm text-gray-700">Oyuncu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Goller</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Asistler</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Şutlar</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Paslar</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Performans</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let player of players">
+        <td class="px-4 py-2">{{ player.name }}</td>
+        <td class="px-4 py-2">{{ player.goals }}</td>
+        <td class="px-4 py-2">{{ player.assists }}</td>
+        <td class="px-4 py-2">{{ player.shots }}</td>
+        <td class="px-4 py-2">{{ player.passes }}</td>
+        <td class="px-4 py-2">
+          <button class="text-blue-500 hover:underline" (click)="showPlayerDetails(player)">Detaylar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Performans Grafiği -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h3 class="text-lg font-semibold mb-4">📈 Performans Grafiği</h3>
+  <p-chart type="line" [data]="performanceData" [options]="chartOptions"></p-chart>
+</div>
+
+<!-- Futbolcu Karşılaştırması -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h3 class="text-lg font-semibold mb-4">⚖️ Futbolcu Karşılaştırması</h3>
+  <p-chart type="bar" [data]="comparisonData" [options]="comparisonOptions"></p-chart>
+</div>
+
+<!-- Takım İstatistikleri -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h3 class="text-lg font-semibold mb-4">🏅 Takım İstatistikleri</h3>
+  <table class="min-w-full table-auto text-left">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="px-4 py-2 text-sm text-gray-700">Toplam Maç Sayısı</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Galibiyet Oranı</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Kaybedilen Maçlar</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Gol Farkı</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-4 py-2">{{ totalMatches }}</td>
+        <td class="px-4 py-2">{{ winRate }}%</td>
+        <td class="px-4 py-2">{{ lostMatches }}</td>
+        <td class="px-4 py-2">{{ goalDifference }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

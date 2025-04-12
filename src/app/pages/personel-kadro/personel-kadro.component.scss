@@ -1,0 +1,71 @@
+.personnel-card {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #1f2937;
+  }
+
+  .table-search input {
+    width: 100%;
+    max-width: 250px;
+    padding-left: 2rem; // ikon için boşluk
+  }
+
+  .table-search i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+  }
+
+  input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+  }
+}
+
+  .person-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+    }
+
+    .name {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .phone {
+      font-size: 12px;
+      color: #6b7280;
+    }
+  }
+
+  .footer {
+    text-align: left;
+    font-size: 14px;
+    padding-top: 10px;
+    color: #374151;
+  }
+
+  ::ng-deep .p-paginator {
+    border: none;
+  }
+

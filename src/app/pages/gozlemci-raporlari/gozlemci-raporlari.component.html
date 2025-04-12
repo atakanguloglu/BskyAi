@@ -1,0 +1,61 @@
+<!-- Kartlar -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Toplam Rapor</h2>
+    <p class="text-2xl font-bold text-blue-600 mt-1">32</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">En İyi Performans</h2>
+    <p class="text-2xl font-bold text-green-600 mt-1">Mehmet Demir</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">Maç Sonuçları</h2>
+    <p class="text-2xl font-bold text-purple-600 mt-1">8/10</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border">
+    <h2 class="text-sm text-gray-500">En Çok Gol Atan</h2>
+    <p class="text-2xl font-bold text-orange-500 mt-1">Ahmet Yılmaz</p>
+  </div>
+</div>
+
+<!-- Grafik Alanı -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border performance-card">
+  <h2 class="text-lg font-semibold mb-4">📈 Gözlemci Performansı</h2>
+  <p-chart type="line"
+           [data]="performanceData"
+           [options]="chartOptions"
+           class="performance-chart">
+  </p-chart>
+</div>
+
+<!-- Gözlemci Raporları Tablosu -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🏆 Gözlemci Raporları</h2>
+  <table class="min-w-full table-auto text-left">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 text-sm text-gray-700">Oyuncu Adı</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Gol</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Asist</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Pozisyon</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Takım Uyumu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Performans Notu</th>
+        <th class="px-4 py-2 text-sm text-gray-700">Gözlemci Yorumları</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let player of players">
+        <td class="px-4 py-2">{{ player.name }}</td>
+        <td class="px-4 py-2">{{ player.goals }}</td>
+        <td class="px-4 py-2">{{ player.assists }}</td>
+        <td class="px-4 py-2">{{ player.position }}</td>
+        <td class="px-4 py-2">{{ player.teamChemistry }}%</td>
+        <td class="px-4 py-2">{{ player.performanceRating }}</td>
+        <td class="px-4 py-2">{{ player.observation }}</td>
+      </tr>
+      <tr *ngIf="players.length === 0">
+        <td colspan="7" class="text-center py-4 text-gray-500">Hiçbir oyuncu verisi mevcut değil.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,38 @@
+<div class="dizilis-wrapper">
+  <div class="formation-selector">
+    <label for="formation">Formasyon Seç: </label>
+    <select id="formation" [(ngModel)]="selectedFormation" (change)="onFormationChange()">
+      <option *ngFor="let formation of formations" [value]="formation">{{ formation }}</option>
+    </select>
+  </div>
+
+  <div class="football-field">
+    <div class="formation-line" *ngFor="let line of formationLines; let lineIndex = index">
+      <div class="player-slot"
+           *ngFor="let player of line; let playerIndex = index"
+           (drop)="onDrop($event, lineIndex, playerIndex)"
+           (dragover)="allowDrop($event)">
+
+        <div class="player-card"
+             draggable="true"
+             (dragstart)="onDragStart($event, player, lineIndex, playerIndex)">
+          {{ player }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="bench-section">
+    <h3>Yedek Oyuncular</h3>
+    <div class="bench">
+      <div class="bench-player" *ngFor="let benchPlayer of benchPlayers">
+        {{ benchPlayer }}
+      </div>
+    </div>
+  </div>
+
+  <div class="team-stats">
+    Takım Kimyası: {{ chemistryScore }}%
+  </div>
+</div>

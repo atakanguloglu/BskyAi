@@ -1,0 +1,35 @@
+<h2 class="text-xl font-semibold mb-4">📋 Antrenman Programı</h2>
+
+<div class="mb-4 flex gap-4 flex-wrap items-center">
+  <p-multiSelect [options]="players"
+                 [(ngModel)]="selectedPlayers"
+                 optionLabel="name"
+                 placeholder="Oyuncu Seç"
+                 display="chip"
+                 class="w-60"></p-multiSelect>
+
+  <p-multiSelect [options]="trainingTypes"
+                 [(ngModel)]="selectedTypes"
+                 placeholder="Antrenman Tipi"
+                 display="chip"
+                 class="w-60"></p-multiSelect>
+
+  <button pButton type="button" label="Yeni Antrenman Ekle" icon="pi pi-plus" (click)="addTraining()"></button>
+</div>
+
+<p-table [value]="trainingList" [paginator]="true" [rows]="5" class="p-datatable-sm">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Oyuncu</th>
+      <th>Antrenman Tipi</th>
+      <th>Tarih</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>{{ row.player }}</td>
+      <td>{{ row.type }}</td>
+      <td>{{ row.date }}</td>
+    </tr>
+  </ng-template>
+</p-table>

@@ -1,0 +1,31 @@
+<div class="layout">
+  <!-- Sidebar -->
+  <div class="sidebar" *ngIf="sidebarOpen">
+    <div class="brand">
+      <img src="assets/Galatasaray.png" alt="Logo" class="logo" />
+      <div class="club-info">
+        <h1>Galatasaray SK</h1>
+        <small>+998 (99) 436-46-15</small>
+      </div>
+    </div>
+
+    <p-panelMenu [model]="menuItems"
+                 styleClass="w-full"
+                 [style]="{ 'border': 'none' }"
+                 [multiple]="true"></p-panelMenu>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="topbar">
+      <button class="menu-button" (click)="toggleSidebar()">
+        <i class="pi pi-bars"></i>
+      </button>
+      <div class="user-info">Merhaba Atakan 👋</div>
+    </div>
+
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
