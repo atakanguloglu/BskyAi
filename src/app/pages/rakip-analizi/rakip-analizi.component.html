@@ -1,1 +1,59 @@
-<p>rakip-analizi works!</p>
+<div class="rakip-analizi-container text-sm p-4">
+  <!-- Başlık ve seçim -->
+  <div class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+    <h2 class="text-lg font-semibold">📊 Rakip Analizi</h2>
+    <p-dropdown [options]="teams" [(ngModel)]="selectedTeam" optionLabel="name"
+                placeholder="Rakip Takımı Seçin" class="w-full md:w-60">
+    </p-dropdown>
+  </div>
+
+  <!-- Temel Karşılaştırmalar -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <p-card header="Takım İstatistikleri (Bu Sezon)" class="shadow-md rounded-xl p-4">
+      <table class="w-full table-auto text-xs">
+        <thead>
+          <tr>
+            <th class="text-left">İstatistik</th>
+            <th class="text-left">{{ selectedTeam?.name || 'Rakip' }}</th>
+            <th class="text-left">{{ userTeam.name }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stat of statKeys">
+            <td class="py-2">{{ statLabels[stat] }}</td>
+            <td>{{ selectedTeam?.stats[stat] }}</td>
+            <td>{{ userTeam.stats[stat] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </p-card>
+
+    <p-card header="Yapay Zekâ Yorumu" class="shadow-md rounded-xl p-4">
+      <p *ngIf="selectedTeam" class="text-sm">
+        ⚠️ <strong>{{ selectedTeam.name }}</strong> takımı <strong>hızlı hücum ve duran toplarda</strong> oldukça etkili.
+        <br />
+        <span class="text-green-600 font-medium">
+          AI Tavsiyesi: Orta sahada pres uygulayın, sol bek bölgesine dikkat edin.
+        </span>
+      </p>
+      <p *ngIf="!selectedTeam" class="text-gray-500 text-sm">
+        Önce rakip takım seçin, ardından yorumlar burada görüntülenecek.
+      </p>
+    </p-card>
+  </div>
+
+  <!-- Grafikler -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <p-card header="Radar Grafiği ile Karşılaştırma" class="shadow-md rounded-xl p-4">
+      <div class="max-w-[450px] mx-auto">
+        <p-chart type="radar" [data]="radarChartData" [options]="chartOptions"></p-chart>
+      </div>
+    </p-card>
+
+    <p-card header="Bar Grafiği (Son 5 Maç Performansı)" class="shadow-md rounded-xl p-4">
+      <div class="max-w-[450px] mx-auto">
+        <p-chart type="bar" [data]="barChartData" [options]="chartOptions"></p-chart>
+      </div>
+    </p-card>
+  </div>
+</div>

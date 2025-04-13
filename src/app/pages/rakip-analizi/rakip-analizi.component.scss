@@ -1,0 +1,22 @@
+.rakip-analizi-container {
+  .p-card {
+    height: 100%;
+  }
+
+  .p-dropdown {
+    font-size: 0.875rem;
+  }
+
+  .p-chart {
+    min-height: 280px;
+  }
+
+  table {
+    width: 100%;
+
+    th, td {
+      padding: 0.5rem;
+      text-align: center;
+    }
+  }
+}
