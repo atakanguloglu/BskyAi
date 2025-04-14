@@ -1,1 +1,122 @@
-<p>settings works!</p>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+  <!-- Sol Menü -->
+  <aside class="bg-gray-100 p-4 rounded-xl shadow col-span-1">
+    <ul class="space-y-2 text-sm font-medium">
+      <li (click)="activeTab = 'club'" [class.font-bold]="activeTab === 'club'">🏟️ Kulüp Bilgileri</li>
+      <li (click)="activeTab = 'permissions'" [class.font-bold]="activeTab === 'permissions'">🔐 Yetkilendirme</li>
+      <li (click)="activeTab = 'preferences'" [class.font-bold]="activeTab === 'preferences'">🌟 Varsayılan Tercihler</li>
+      <li (click)="activeTab = 'notifications'" [class.font-bold]="activeTab === 'notifications'">📢 Bildirimler</li>
+      <li (click)="activeTab = 'backup'" [class.font-bold]="activeTab === 'backup'">📅 Yedekleme</li>
+      <li (click)="activeTab = 'advanced'" [class.font-bold]="activeTab === 'advanced'">🛠️ Gelişmiş</li>
+      <li (click)="activeTab = 'modules'" [class.font-bold]="activeTab === 'modules'">🧩 Modüller</li>
+      <li (click)="activeTab = 'beta'" [class.font-bold]="activeTab === 'beta'">🧪 Beta</li>
+      <li (click)="activeTab = 'feedback'" [class.font-bold]="activeTab === 'feedback'">📨 Geri Bildirim</li>
+    </ul>
+  </aside>
+
+  <!-- Sağ İçerik -->
+  <section class="col-span-3" [@fadeSlide]>
+    <div class="bg-white  shadow-xl p-6 space-y-6 animate-fade-in">
+      <ng-container *ngIf="activeTab === 'club'">
+        <h2 class="text-lg font-semibold mb-2">🏟️ Kulüp Bilgileri</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <span class="p-float-label"><input id="name" type="text" pInputText [(ngModel)]="club.name" placeholder=" " /><label for="name">Kulüp Adı</label></span>
+          <span class="p-float-label"><input id="founded" type="number" pInputText [(ngModel)]="club.founded" placeholder=" " /><label for="founded">Kuruluş Yılı</label></span>
+          <span class="p-float-label"><input id="country" type="text" pInputText [(ngModel)]="club.country" placeholder=" " /><label for="country">Ülke</label></span>
+          <span class="p-float-label"><input id="city" type="text" pInputText [(ngModel)]="club.city" placeholder=" " /><label for="city">Şehir</label></span>
+          <span class="p-float-label"><input id="stadium" type="text" pInputText [(ngModel)]="club.stadium" placeholder=" " /><label for="stadium">Stadyum</label></span>
+          <span class="p-float-label"><input id="colors" type="text" pInputText [(ngModel)]="club.colors" placeholder=" " /><label for="colors">Renkler</label></span>
+          <span class="p-float-label col-span-2"><input id="logoUrl" type="text" pInputText [(ngModel)]="club.logoUrl" placeholder=" " /><label for="logoUrl">Logo URL</label></span>
+          <span class="p-float-label col-span-2"><textarea id="about" rows="3" pInputTextarea [(ngModel)]="club.about" placeholder=" " class="resize-none"></textarea><label for="about">Kulüp Hakkında</label></span>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'permissions'">
+        <h2 class="text-lg font-semibold mb-2">🔐 Yetkilendirme</h2>
+        <table class="w-full table-auto border text-sm">
+          <thead class="bg-gray-100 text-gray-800">
+            <tr><th class="p-3 text-left">Rol</th><th class="p-3 text-left">Düzenleyebilir mi?</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let perm of permissions" class="even:bg-gray-50 hover:bg-blue-50 transition">
+              <td class="p-3">{{ perm.role }}</td>
+              <td class="p-3"><input type="checkbox" [(ngModel)]="perm.canEdit" class="accent-blue-500 scale-110" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-container *ngIf="activeTab === 'preferences'">
+        <h2 class="text-lg font-semibold mb-2">🌟 Varsayılan Tercihler</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <p-dropdown [options]="formationOptions" [(ngModel)]="defaultPreferences.defaultFormation" placeholder="Diziliş Seçin" class="w-full" />
+          <p-dropdown [options]="homepageOptions" [(ngModel)]="defaultPreferences.homepage" optionLabel="label" placeholder="Ana Sayfa" class="w-full" />
+          <p-dropdown [options]="languageOptions" [(ngModel)]="defaultPreferences.defaultLanguage" placeholder="Dil Seçimi" class="w-full" />
+          <p-checkbox [(ngModel)]="defaultPreferences.showHints" binary="true" label="İpuçlarını Göster" />
+          <p-checkbox [(ngModel)]="defaultPreferences.autoSave" binary="true" label="Otomatik Kaydet" />
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'notifications'">
+        <h2 class="text-lg font-semibold mb-2">📢 Bildirim Ayarları</h2>
+        <div class="space-y-3">
+          <p-checkbox [(ngModel)]="notifications.newSuggestions" binary="true" label="Yeni önerilerden haberdar et" />
+          <p-checkbox [(ngModel)]="notifications.weeklySummaryEmail" binary="true" label="Haftalık özet e-postası gönder" />
+          <p-checkbox [(ngModel)]="notifications.matchDayReminders" binary="true" label="Maç günü hatırlatıcıları" />
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'backup'">
+        <h2 class="text-lg font-semibold mb-2">📅 Yedekleme & Dışa Aktarım</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <p-dropdown [options]="exportFormats" [(ngModel)]="backups.exportFormat" placeholder="Dışa Aktarma Formatı" class="w-full" />
+          <p-dropdown [options]="backupFrequencies" [(ngModel)]="backups.autoBackupFrequency" placeholder="Yedekleme Sıklığı" class="w-full" />
+          <div class="flex items-center gap-2 mt-2">
+            <input type="checkbox" [(ngModel)]="backups.autoBackupEnabled" class="accent-blue-500" />
+            Otomatik Yedekleme
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'advanced'">
+        <h2 class="text-lg font-semibold mb-2">🛠️ Gelişmiş Ayarlar</h2>
+        <div class="space-y-3">
+          <p-checkbox [(ngModel)]="advanced.enableLogs" binary="true" label="Loglama Aktif" />
+          <p-checkbox [(ngModel)]="advanced.developerMode" binary="true" label="Geliştirici Modu" />
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'modules'">
+        <h2 class="text-lg font-semibold mb-2">🧩 Modül Aktifleştirme</h2>
+        <div class="space-y-3">
+          <p-checkbox [(ngModel)]="modules.chatbot" binary="true" label="Chatbot Modülü" />
+          <p-checkbox [(ngModel)]="modules.matchAnalysis" binary="true" label="Rakip Analiz Modülü" />
+          <p-checkbox [(ngModel)]="modules.healthTracking" binary="true" label="Sağlık Takip Modülü" />
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'beta'">
+        <h2 class="text-lg font-semibold mb-2">🧪 Beta / Test Özellikleri</h2>
+        <div class="space-y-3">
+          <p-checkbox [(ngModel)]="beta.enableExperimentalFeatures" binary="true" label="Deneysel Özellikleri Aktifleştir" />
+          <p-checkbox [(ngModel)]="beta.autoFormationAI" binary="true" label="Otomatik Diziliş AI" />
+          <p-checkbox [(ngModel)]="beta.chemistryPrediction" binary="true" label="Kimya Tahmini" />
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'feedback'">
+        <h2 class="text-lg font-semibold mb-2">📨 Geri Bildirim</h2>
+        <div class="space-y-4">
+          <span class="p-float-label"><input pInputText id="email" [(ngModel)]="feedback.email" placeholder=" " /><label for="email">E-Posta (isteğe bağlı)</label></span>
+          <span class="p-float-label"><textarea pInputTextarea id="message" [(ngModel)]="feedback.message" rows="4" class="w-full resize-none" placeholder=" "></textarea><label for="message">Geri Bildiriminiz</label></span>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+</div>
+
+<!-- Sabit Kaydet Butonu -->
+<div class="fixed bottom-6 right-6 z-50">
+  <button pButton type="button" label="Kaydet" (click)="saveSettings()"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition">
+  </button>
+</div>

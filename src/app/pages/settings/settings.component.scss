@@ -1,0 +1,90 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::ng-deep {
+  /* Sayfa açılış animasyonu */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out both;
+  }
+  /* Sol menü stilleri */
+  aside ul li {
+    @apply px-3 py-2 rounded cursor-pointer transition-all duration-200;
+  }
+
+  aside ul li:hover {
+    @apply bg-blue-100 text-blue-700;
+  }
+
+  aside ul li.font-bold {
+    @apply bg-blue-600 text-white;
+  }
+  /* Float label inputlar */
+  .p-float-label {
+    position: relative;
+
+    label {
+      @apply absolute left-4 top-2 text-sm text-gray-500 transition-all duration-150 pointer-events-none;
+    }
+
+    input:focus + label,
+    input:not(:placeholder-shown) + label,
+    textarea:focus + label,
+    textarea:not(:placeholder-shown) + label {
+      @apply -top-3.5 left-3 text-xs text-blue-600 bg-white dark:bg-gray-900 px-1;
+    }
+
+    input,
+    textarea {
+      @apply w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200;
+    }
+  }
+  /* PrimeNG özel stiller */
+  .p-dropdown {
+    @apply w-full;
+  }
+
+  .p-checkbox .p-checkbox-box {
+    @apply border-gray-300 dark:border-gray-600 rounded;
+  }
+
+  .p-checkbox.p-highlight .p-checkbox-box {
+    @apply bg-blue-500 border-blue-500;
+  }
+
+  .p-checkbox-icon {
+    @apply text-white text-sm;
+  }
+  /* Tablo stilleri */
+  table {
+    @apply w-full border-collapse text-sm;
+
+    thead {
+      @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200;
+    }
+
+    th, td {
+      @apply px-4 py-3 border-b border-gray-200 dark:border-gray-700;
+    }
+
+    tbody tr {
+      @apply even:bg-gray-50 dark:even:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-900 transition;
+    }
+
+    input[type="checkbox"] {
+      @apply accent-blue-500 scale-110;
+    }
+  }
+  /* Kaydet Butonu */
+  button.p-button {
+    @apply rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg transition-all duration-300;
+  }
+}

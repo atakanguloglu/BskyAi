@@ -1,1 +1,115 @@
-<p>team-chemistry works!</p>
+<div class="page-container text-sm">
+  <h2 class="text-xl font-semibold mb-6">🧪 Takım Kimyası Değerlendirme</h2>
+
+  <!-- Üst Bilgi Kartları -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <p-card header="Genel Kimya Skoru" class="shadow-md rounded-xl p-4">
+      <p class="text-3xl font-bold text-green-600">{{ chemistryScore }}%</p>
+      <p class="text-xs mt-2 text-gray-600">{{ getChemistryAdvice() }}</p>
+    </p-card>
+    <p-card header="Dil Uyumu" class="shadow-md rounded-xl p-4">
+      <p class="text-sm text-gray-800">{{ getLanguageDiversityComment() }}</p>
+    </p-card>
+    <p-card header="Bölgesel Dağılım" class="shadow-md rounded-xl p-4">
+      <p class="text-sm text-gray-800">{{ getRegionDistributionComment() }}</p>
+    </p-card>
+  </div>
+
+  <!-- Grafikler -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <p-card header="📌 Bölgelere Göre Dağılım" class="shadow-md rounded-xl p-4">
+      <p-chart type="pie" [data]="regionChartData" [options]="chartOptions"></p-chart>
+    </p-card>
+    <p-card header="🗣️ Dillerin Dağılımı" class="shadow-md rounded-xl p-4">
+      <p-chart type="doughnut" [data]="languageChartData" [options]="chartOptions"></p-chart>
+    </p-card>
+    <p-card header="📍 Pozisyon Dağılımı" class="shadow-md rounded-xl p-4">
+      <p-chart type="bar" [data]="positionChartData" [options]="chartOptions"></p-chart>
+    </p-card>
+  </div>
+
+  <!-- Oyuncu Tablosu -->
+  <div class="bg-white rounded-xl border shadow p-4 mb-10">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-medium">📋 Oyuncu Listesi</h3>
+      <div class="flex gap-2 items-center">
+        <p-dropdown [options]="positions"
+                    [(ngModel)]="selectedPositionFilter"
+                    (onChange)="filterPlayers()"
+                    placeholder="Pozisyona Göre Filtrele"
+                    class="w-48 text-xs">
+        </p-dropdown>
+        <button class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600"
+                (click)="resetFilters()">
+          Sıfırla
+        </button>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto text-xs border">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="p-2">Ad</th>
+            <th class="p-2">Ülke</th>
+            <th class="p-2">Dil</th>
+            <th class="p-2">Pozisyon</th>
+            <th class="p-2">Bölge</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of filteredPlayers" class="hover:bg-gray-50 border-b">
+            <td class="p-2">{{ player.name }}</td>
+            <td class="p-2">{{ player.country }}</td>
+            <td class="p-2">{{ player.language }}</td>
+            <td class="p-2">{{ player.position }}</td>
+            <td class="p-2">{{ player.region }}</td>
+          </tr>
+          <tr *ngIf="filteredPlayers.length === 0">
+            <td colspan="5" class="text-center py-4 text-gray-400">Hiçbir oyuncu eşleşmedi.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Sahada Pozisyon Kimyası Görselleştirme -->
+  <div class="relative w-full h-[520px] mt-12 mb-10 rounded-xl overflow-hidden shadow-xl border border-gray-300 bg-green-600 bg-[url('/assets/images/green-field.png')] bg-cover bg-center">
+    <ng-container *ngFor="let pos of positions">
+      <div class="absolute px-4 py-2 rounded-full shadow-lg text-white text-xs font-semibold uppercase tracking-wider cursor-pointer transition-all duration-300 hover:scale-105"
+           [ngStyle]="{
+             top: positionMap[pos].top,
+             left: positionMap[pos].left,
+             transform: 'translate(-50%, -50%)',
+             'background-color': positionColors[pos] || '#16a34a'
+           }"
+           (click)="openPositionModal(pos, $event)">
+        <div class="text-center leading-snug">
+          <span class="block text-[11px] font-bold">{{ getPositionCount(pos) }}x</span>
+          {{ pos }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Modal (Pozisyon Oyuncuları) -->
+  <p-dialog header="{{ selectedPosition }} Oyuncuları"
+            [(visible)]="modalVisible"
+            [modal]="true"
+            [closable]="true"
+            [style]="{ width: '400px', top: modalPosition.top, left: modalPosition.left, position: 'fixed' }">
+    <ng-container *ngIf="selectedPositionPlayers.length > 0; else noPlayers">
+      <div *ngFor="let player of selectedPositionPlayers" class="mb-3 p-3 border rounded shadow bg-white text-sm">
+        <div class="font-medium">{{ player.name }}</div>
+        <div class="text-xs text-gray-500">{{ player.country }} | {{ player.language }} | {{ player.region }}</div>
+        <button class="mt-2 text-xs text-blue-600 hover:underline">
+          Oyuncu Detayı →
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-template #noPlayers>
+      <p class="text-gray-500">Bu pozisyonda oyuncu yok.</p>
+    </ng-template>
+  </p-dialog>
+
+</div>
