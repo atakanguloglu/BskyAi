@@ -1,0 +1,148 @@
+/* Kadro Önerisi özel stilleri */
+:host {
+  display: block;
+  font-size: 14px;
+}
+
+.radar-chart-container {
+  width: 100%;
+  max-width: 400px;
+  height: 240px;
+  margin: 0 auto;
+}
+
+.player-radar-chart {
+  height: 100% !important;
+
+  ::ng-deep canvas {
+    max-height: 240px !important;
+  }
+}
+
+/* Futbol sahası üzerindeki oyuncu görünümü */
+.player-marker {
+  padding: 5px 10px;
+  border-radius: 9999px;
+  background-color: #1e40af;
+  color: white;
+  font-weight: 600;
+  font-size: 11px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  transition: transform 0.2s ease;
+  width: auto;
+  line-height: 1;
+
+  &:hover {
+    transform: translate(-50%, -50%) scale(1.15) !important;
+    z-index: 10;
+  }
+
+  .player-name {
+    display: block;
+    margin-bottom: 1px;
+  }
+
+  .player-rating {
+    display: block;
+    font-size: 10px;
+    opacity: 0.9;
+  }
+}
+
+/* Tablolar */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+
+  th {
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 10px;
+    color: #4b5563;
+    background-color: #f9fafb;
+    padding: 6px !important;
+  }
+
+  td {
+    font-size: 11px;
+    padding: 4px 6px !important;
+    vertical-align: middle;
+  }
+  /* Zebra görünümü */
+  tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+  }
+
+  tbody tr:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+/* Renkli değerler */
+.text-green-600 {
+  color: #059669 !important;
+}
+
+.text-yellow-600 {
+  color: #d97706 !important;
+}
+
+.text-red-600 {
+  color: #dc2626 !important;
+}
+
+/* Başlıklar */
+h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+  padding: 8px 12px;
+  background-color: #f3f4f6;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border: 1px solid #e5e7eb;
+  border-bottom: none;
+}
+
+/* Tablo konteyner stilleri */
+.table-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+/* Futbol sahası arka planı */
+.field-bg {
+  background-color: #16a34a; /* Canlı yeşil renk */
+  background-image: linear-gradient( 0deg, rgba(22, 163, 74, 1) 0%, rgba(21, 128, 61, 1) 100% );
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive ayarları */
+@media (max-width: 768px) {
+  .player-marker {
+    padding: 4px 8px;
+    font-size: 10px;
+
+    .player-rating {
+      font-size: 9px;
+    }
+  }
+
+  table {
+    th, td {
+      padding: 4px !important;
+      font-size: 10px;
+    }
+  }
+
+  h3 {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+}

@@ -4,25 +4,224 @@
     <h2 class="text-sm text-gray-500">Toplam Kadro</h2>
     <p class="text-2xl font-bold text-blue-600 mt-1">{{ toplamKadro }}</p>
   </div>
-
   <div class="bg-white rounded-xl shadow p-4 border">
     <h2 class="text-sm text-gray-500">Uyumlu Oyuncular</h2>
     <p class="text-2xl font-bold text-green-600 mt-1">{{ uyumluOyuncular }}</p>
   </div>
-
   <div class="bg-white rounded-xl shadow p-4 border">
     <h2 class="text-sm text-gray-500">Önerilen Oyuncular</h2>
     <p class="text-2xl font-bold text-purple-600 mt-1">{{ onerilenOyuncular }}</p>
   </div>
-
   <div class="bg-white rounded-xl shadow p-4 border">
     <h2 class="text-sm text-gray-500">Takım Durumu</h2>
     <p class="text-2xl font-bold text-orange-500 mt-1">{{ takimDurumu }}</p>
   </div>
 </div>
 
+<!-- Filtreler ve Öneri Butonu -->
+<div class="bg-white mt-6 p-4 rounded-xl shadow border">
+  <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+    <h2 class="text-base font-semibold mb-2 md:mb-0">🔍 Kadro Oluşturma Kriterleri</h2>
+    <button (click)="generateRecommendation()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+      Kadro Önerisi Oluştur
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+    <div>
+      <label class="block text-xs font-medium text-gray-700 mb-1">Formasyon</label>
+      <select [(ngModel)]="selectedFormation" class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md">
+        <option *ngFor="let formation of formations" [value]="formation">{{ formation }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-xs font-medium text-gray-700 mb-1">Oyun Tarzı</label>
+      <select [(ngModel)]="selectedPlayStyle" class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md">
+        <option *ngFor="let style of playStyles" [value]="style">{{ style }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-xs font-medium text-gray-700 mb-1">Öncelik</label>
+      <select [(ngModel)]="selectedPriority" class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md">
+        <option *ngFor="let priority of priorities" [value]="priority">{{ priority }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-xs font-medium text-gray-700 mb-1">Genç Oyuncu Oranı</label>
+      <div class="flex items-center">
+        <input type="range" [(ngModel)]="youngPlayerRatio" min="0" max="100" step="5" class="w-full" />
+      </div>
+      <div class="flex justify-between text-xs text-gray-600">
+        <span>%0</span>
+        <span>%50</span>
+        <span>%100</span>
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-xs font-medium text-gray-700 mb-1">Kadro Uyum Minimum Skoru</label>
+      <div class="flex items-center">
+        <input type="range" [(ngModel)]="minChemistryScore" min="0" max="100" step="5" class="w-full" />
+      </div>
+      <div class="flex justify-between text-xs text-gray-600">
+        <span>%0</span>
+        <span>%50</span>
+        <span>%100</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Takım Performansı Grafik -->
-<div class="bg-white mt-8 p-6 rounded-xl shadow border">
-  <h2 class="text-lg font-semibold mb-4">📈 Kadro Performansı</h2>
-  <p-chart type="line" [data]="performanceData" [options]="chartOptions" style="height: 300px;"></p-chart>
+<div class="bg-white mt-4 p-4 rounded-xl shadow border">
+  <h2 class="text-base font-semibold mb-3">📈 Kadro Performansı</h2>
+  <p-chart type="line" [data]="performanceData" [options]="chartOptions" style="height: 250px;"></p-chart>
+</div>
+
+<!-- Önerilen Kadro -->
+<div *ngIf="showRecommendation" class="bg-white mt-4 p-4 rounded-xl shadow border">
+  <h2 class="text-base font-semibold mb-3">⚽ Önerilen Kadro ({{ selectedFormation }})</h2>
+
+  <!-- Futbol Sahası Görünümü -->
+  <div class="relative w-full h-[360px] mb-4 rounded-xl overflow-hidden border border-gray-300 bg-green-600 bg-[url('/assets/images/green-field.png')] bg-cover bg-center">
+    <div *ngFor="let player of recommendedLineup" class="player-marker absolute"
+        [ngStyle]="{
+  top: player.fieldPosition?.top || '0%',
+  left: player.fieldPosition?.left || '0%',
+  transform: 'translate(-50%, -50%)'
+}">
+      <div class="text-center">
+        <span class="player-name">{{ player.name }}</span>
+        <span class="player-rating">{{ player.rating }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kadro Tabloları -->
+  <div class="grid grid-cols-1 gap-4">
+    <!-- İlk 11 -->
+    <div>
+      <h3 class="text-sm font-semibold bg-gray-100 p-2 rounded-t-lg">İlk 11</h3>
+      <div class="bg-white border border-gray-200 rounded-b-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200 text-xs">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-3 py-2 text-left text-gray-700 font-medium">Oyuncu</th>
+              <th scope="col" class="px-3 py-2 text-center text-gray-700 font-medium">Poz</th>
+              <th scope="col" class="px-3 py-2 text-center text-gray-700 font-medium">Uyum</th>
+              <th scope="col" class="px-3 py-2 text-center text-gray-700 font-medium">Form</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let player of recommendedLineup">
+              <td class="px-3 py-1.5 whitespace-nowrap font-medium text-gray-900">{{ player.name }}</td>
+              <td class="px-3 py-1.5 whitespace-nowrap text-center">{{ player.position }}</td>
+              <td class="px-3 py-1.5 whitespace-nowrap text-center">
+                <span class="font-medium"
+                      [class.text-green-600]="player.chemistry >= 80"
+                      [class.text-yellow-600]="player.chemistry < 80 && player.chemistry >= 60"
+                      [class.text-red-600]="player.chemistry < 60">
+                  {{ player.chemistry }}%
+                </span>
+              </td>
+              <td class="px-3 py-1.5 whitespace-nowrap text-center">
+                <span class="font-medium"
+                      [class.text-green-600]="player.form >= 8"
+                      [class.text-yellow-600]="player.form < 8 && player.form >= 6"
+                      [class.text-red-600]="player.form < 6">
+                  {{ player.form }}/10
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Yedek Oyuncular -->
+    <div>
+      <h3 class="text-sm font-semibold bg-gray-100 p-2 rounded-t-lg">Yedek Oyuncular</h3>
+      <div class="bg-white border border-gray-200 rounded-b-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200 text-xs">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-3 py-2 text-left text-gray-700 font-medium">Oyuncu</th>
+              <th scope="col" class="px-3 py-2 text-center text-gray-700 font-medium">Poz</th>
+              <th scope="col" class="px-3 py-2 text-center text-gray-700 font-medium">Uyum</th>
+              <th scope="col" class="px-3 py-2 text-center text-gray-700 font-medium">Form</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let player of benchPlayers">
+              <td class="px-3 py-1.5 whitespace-nowrap font-medium text-gray-900">{{ player.name }}</td>
+              <td class="px-3 py-1.5 whitespace-nowrap text-center">{{ player.position }}</td>
+              <td class="px-3 py-1.5 whitespace-nowrap text-center">
+                <span class="font-medium"
+                      [class.text-green-600]="player.chemistry >= 80"
+                      [class.text-yellow-600]="player.chemistry < 80 && player.chemistry >= 60"
+                      [class.text-red-600]="player.chemistry < 60">
+                  {{ player.chemistry }}%
+                </span>
+              </td>
+              <td class="px-3 py-1.5 whitespace-nowrap text-center">
+                <span class="font-medium"
+                      [class.text-green-600]="player.form >= 8"
+                      [class.text-yellow-600]="player.form < 8 && player.form >= 6"
+                      [class.text-red-600]="player.form < 6">
+                  {{ player.form }}/10
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Analizi -->
+  <div class="mt-4 bg-blue-50 p-3 rounded-lg border border-blue-100">
+    <h3 class="text-sm font-semibold text-blue-800 mb-2">🧠 AI Analizi ve Açıklamalar</h3>
+    <p class="text-blue-900 mb-2 text-xs">
+      Bu kadro seçimi {{ selectedPlayStyle }} tarzında oyun için optimize edilmiştir. Uyum skoru %{{ averageChemistry }} seviyesindedir.
+    </p>
+    <ul class="list-disc pl-4 text-blue-900 space-y-1 text-xs">
+      <li>Orta sahada {{ recentFormPlayers.join(', ') }} son maçlardaki yüksek performansları nedeniyle tercih edilmiştir.</li>
+      <li>Takımın yaş ortalaması {{ averageAge }} olup, bu değer ligdeki ortalama yaştan daha {{ averageAge < 26 ? 'düşük' : 'yüksek' }}tir.</li>
+      <li>{{ selectedFormation }} dizilişi, takımınızın kadro derinliği ve oyun tarzına en uygun seçenek olarak belirlenmiştir.</li>
+      <li>İlk 11'deki oyuncular arasında {{ highestChemistryPlayer }} en yüksek uyum skoruna sahiptir.</li>
+    </ul>
+  </div>
+
+  <!-- Kaydet ve Dışa Aktar Butonları -->
+  <div class="mt-4 flex justify-end space-x-2">
+    <button class="px-3 py-1.5 bg-gray-200 text-gray-800 rounded text-xs hover:bg-gray-300 transition">
+      📋 PDF Olarak Dışa Aktar
+    </button>
+    <button class="px-3 py-1.5 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition">
+      💾 Kadroyu Kaydet
+    </button>
+  </div>
+</div>
+
+<!-- Oyuncu Karşılaştırma Grafiği -->
+<div *ngIf="showRecommendation" class="bg-white mt-4 p-4 rounded-xl shadow border">
+  <h2 class="text-base font-semibold mb-3">📊 Pozisyon Bazında Oyuncu Karşılaştırması</h2>
+
+  <div class="mb-3">
+    <select [(ngModel)]="selectedPositionToCompare" (change)="updateComparisonChart()" class="w-full md:w-64 px-2 py-1.5 text-sm border border-gray-300 rounded-md">
+      <option *ngFor="let pos of allPositions" [value]="pos">{{ pos }} Pozisyonu Karşılaştır</option>
+    </select>
+  </div>
+  <div class="radar-chart-container">
+    <p-chart type="radar"
+             [data]="comparisonChartData"
+             [options]="radarChartOptions"
+             class="player-radar-chart">
+    </p-chart>
+  </div>
 </div>

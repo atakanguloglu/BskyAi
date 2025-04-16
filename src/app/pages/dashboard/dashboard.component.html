@@ -1,4 +1,5 @@
-<!-- Kartlar -->
+```html
+<!-- Özet Kartları -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
   <div class="bg-white rounded-xl shadow p-4 border">
     <h2 class="text-sm text-gray-500">Toplam Oyuncu</h2>
@@ -18,9 +19,38 @@
   </div>
 </div>
 
+<!-- Yaklaşan Maçlar -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">⚽ Yaklaşan Maçlar</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div *ngFor="let match of upcomingMatches" class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-center">
+        <span class="font-medium">{{ match.homeTeam }}</span>
+        <span class="text-gray-500">vs</span>
+        <span class="font-medium">{{ match.awayTeam }}</span>
+      </div>
+      <div class="text-xs text-center mt-2 text-gray-600">
+        {{ match.date | date:'dd MMM' }} • {{ match.competition }}
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- AI Taktik Önerileri -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🧠 AI Taktik Önerileri</h2>
+  <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 text-blue-900">
+    <h3 class="font-medium text-lg">Beşiktaş maçı için öneriler:</h3>
+    <ul class="mt-2 space-y-2 ml-5 list-disc">
+      <li>Rakibin sol kanat zayıflığını kullanmak için Kerem Aktürkoğlu'na pozisyonel özgürlük verin</li>
+      <li>Orta sahada Torreira ve Demirbay'ın kanatlar arasında hızlı geçişleri kolaylaştırın</li>
+      <li>Beşiktaş'ın orta saha presi yüksek, direkt paslarla bu presi kırmayı deneyin</li>
+    </ul>
+    <button class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">Detaylı Raporu Gör</button>
+  </div>
+</div>
 
-<!-- Grafik ve Puan Durumu Alanı -->
+<!-- Grafikler ve Puan Durumu -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
   <!-- Grafik Alanı -->
   <div class="bg-white p-6 rounded-xl shadow border">
@@ -39,11 +69,11 @@
       <thead class="bg-gray-100">
         <tr>
           <th class="px-4 py-2 text-sm text-gray-700">Takım Adı</th>
-          <th class="px-4 py-2 text-sm text-gray-700">Oynanan Maçlar</th>
-          <th class="px-4 py-2 text-sm text-gray-700">Galibiyet</th>
-          <th class="px-4 py-2 text-sm text-gray-700">Beraberlik</th>
-          <th class="px-4 py-2 text-sm text-gray-700">Mağlubiyet</th>
-          <th class="px-4 py-2 text-sm text-gray-700">Puan</th>
+          <th class="px-4 py-2 text-sm text-gray-700">O</th>
+          <th class="px-4 py-2 text-sm text-gray-700">G</th>
+          <th class="px-4 py-2 text-sm text-gray-700">B</th>
+          <th class="px-4 py-2 text-sm text-gray-700">M</th>
+          <th class="px-4 py-2 text-sm text-gray-700">P</th>
         </tr>
       </thead>
       <tbody>
@@ -53,13 +83,158 @@
           <td class="px-4 py-2">{{ team.wins }}</td>
           <td class="px-4 py-2">{{ team.draws }}</td>
           <td class="px-4 py-2">{{ team.losses }}</td>
-          <td class="px-4 py-2">{{ team.points }}</td>
-        </tr>
-        <tr *ngIf="teams.length === 0">
-          <td colspan="6" class="text-center py-4 text-gray-500">Hiçbir takım verisi mevcut değil.</td>
+          <td class="px-4 py-2 font-bold">{{ team.points }}</td>
         </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- Sakatlık ve Ceza Durumu -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🚑 Sakatlık & Ceza Durumu</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <h3 class="text-md font-medium mb-2">Sakatlıklar</h3>
+      <ul class="space-y-2">
+        <li *ngFor="let injury of injuries" class="flex items-center gap-2 text-sm">
+          <span class="w-2 h-2 rounded-full" [ngClass]="{
+            'bg-red-500': injury.severity === 'Uzun Süreli',
+            'bg-yellow-500': injury.severity === 'Orta Süreli',
+            'bg-green-500': injury.severity === 'Kısa Süreli'
+          }"></span>
+          <span>{{ injury.player }}</span>
+          <span class="text-gray-500 text-xs">{{ injury.type }} - {{ injury.returnDate | date }}</span>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-md font-medium mb-2">Cezalılar</h3>
+      <ul class="space-y-2">
+        <li *ngFor="let suspension of suspensions" class="flex items-center gap-2 text-sm">
+          <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+          <span>{{ suspension.player }}</span>
+          <span class="text-gray-500 text-xs">{{ suspension.reason }} - {{ suspension.matches }} Maç</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Oyuncu Kondisyon Takibi -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">💪 Oyuncu Kondisyon Takibi</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <div *ngFor="let player of playerFitness" class="p-3 rounded-lg border"
+         [ngClass]="{
+         'bg-red-50 border-red-200' : player.fitness < 60,
+           'bg-yellow-50 border-yellow-200': player.fitness >= 60 && player.fitness < 80,
+           'bg-green-50 border-green-200': player.fitness >= 80
+         }">
+      <div class="text-sm font-medium">{{ player.name }}</div>
+      <div class="flex items-center mt-2">
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="h-2 rounded-full"
+               [ngStyle]="{'width.%': player.fitness}"
+               [ngClass]="{
+                 'bg-red-500': player.fitness < 60,
+                 'bg-yellow-500': player.fitness >= 60 && player.fitness < 80,
+                 'bg-green-500': player.fitness >= 80
+               }"></div>
+        </div>
+        <span class="ml-2 text-xs">{{ player.fitness }}%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Antrenman Takvimi -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">📆 Haftalık Antrenman Programı</h2>
+  <div class="grid grid-cols-7 gap-2">
+    <div *ngFor="let day of trainingSchedule" class="border rounded-lg p-3 text-center hover:shadow-md transition-shadow">
+      <div class="text-sm font-medium">{{ day.date | date:'EEE' }}</div>
+      <div class="text-xs text-gray-500">{{ day.date | date:'dd MMM' }}</div>
+      <div class="mt-2" [ngClass]="{
+        'text-blue-600': day.type === 'Teknik',
+        'text-purple-600': day.type === 'Taktik',
+        'text-green-600': day.type === 'Kondisyon',
+        'text-red-600': day.type === 'Dinlenme',
+        'text-yellow-600': day.type === 'Maç'
+      }">
+        {{ day.type }}
+      </div>
+      <div class="text-xs mt-1">{{ day.duration }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Sezon Bütçesi -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">💰 Sezon Bütçesi</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-blue-50 p-4 rounded-lg">
+      <p class="text-sm text-gray-600">Toplam Bütçe</p>
+      <p class="text-2xl font-bold">{{ budget.total | currency:'EUR' }}</p>
+    </div>
+    <div class="bg-green-50 p-4 rounded-lg">
+      <p class="text-sm text-gray-600">Kullanılan</p>
+      <p class="text-2xl font-bold">{{ budget.used | currency:'EUR' }}</p>
+      <div class="mt-2 bg-gray-200 h-2 rounded-full">
+        <div class="bg-green-500 h-2 rounded-full" [style.width.%]="(budget.used / budget.total) * 100"></div>
+      </div>
+    </div>
+    <div class="bg-purple-50 p-4 rounded-lg">
+      <p class="text-sm text-gray-600">Kalan Bütçe</p>
+      <p class="text-2xl font-bold">{{ budget.remaining | currency:'EUR' }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Transfer Gündemi -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🔄 Transfer Gündemi</h2>
+  <table class="min-w-full table-auto text-left">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 text-sm">Oyuncu</th>
+        <th class="px-4 py-2 text-sm">Kulüp</th>
+        <th class="px-4 py-2 text-sm">Pozisyon</th>
+        <th class="px-4 py-2 text-sm">Tahmini Değer</th>
+        <th class="px-4 py-2 text-sm">Durum</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let target of transferTargets">
+        <td class="px-4 py-2">{{ target.name }}</td>
+        <td class="px-4 py-2">{{ target.club }}</td>
+        <td class="px-4 py-2">{{ target.position }}</td>
+        <td class="px-4 py-2">{{ target.value | currency:'EUR' }}</td>
+        <td class="px-4 py-2">
+          <span class="px-2 py-1 rounded text-xs" [ngClass]="{
+            'bg-green-100 text-green-800': target.status === 'Görüşme',
+            'bg-yellow-100 text-yellow-800': target.status === 'Takip',
+            'bg-blue-100 text-blue-800': target.status === 'İzleme'
+          }">{{ target.status }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Hedef Takip -->
+<div class="bg-white mt-8 p-6 rounded-xl shadow border">
+  <h2 class="text-lg font-semibold mb-4">🎯 Sezon Hedefleri</h2>
+  <div class="space-y-4">
+    <div *ngFor="let goal of seasonGoals">
+      <div class="flex justify-between items-center">
+        <span class="font-medium">{{ goal.name }}</span>
+        <span class="text-sm">{{ goal.current }}/{{ goal.target }}</span>
+      </div>
+      <div class="mt-2 bg-gray-200 rounded-full h-2">
+        <div class="h-2 rounded-full bg-blue-600" [style.width.%]="(goal.current / goal.target) * 100"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -123,8 +298,6 @@
   </table>
 </div>
 
-
-
 <!-- Oyuncu İstatistikleri Tablosu -->
 <div class="bg-white mt-8 p-6 rounded-xl shadow border">
   <h2 class="text-lg font-semibold mb-4">🏆 Oyuncu İstatistikleri</h2>
@@ -141,7 +314,6 @@
         <th class="px-4 py-2 text-sm text-gray-700">Moral Durumu</th>
         <th class="px-4 py-2 text-sm text-gray-700">Son Antrenman Skoru</th>
       </tr>
-
     </thead>
     <tbody>
       <tr *ngFor="let player of players">
@@ -155,9 +327,7 @@
         <td class="px-4 py-2">{{ player.moraleStatus }}</td>
         <td class="px-4 py-2">{{ player.lastTrainingScore }}</td>
       </tr>
-      <tr *ngIf="players.length === 0">
-        <td colspan="9" class="text-center py-4 text-gray-500">Hiçbir oyuncu verisi mevcut değil.</td>
-      </tr>
     </tbody>
   </table>
 </div>
+```
