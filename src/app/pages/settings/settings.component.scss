@@ -1,90 +1,96 @@
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
+.settings-container {
+  @apply p-4 md:p-6 max-w-screen-2xl mx-auto;
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .header-section {
+    @apply mb-6 border-b pb-4;
   }
-}
+  // Sol navigasyon stili
+  .settings-navigation {
+    .nav-item {
+      @apply px-3 py-2.5 rounded-lg flex items-center cursor-pointer transition-all duration-200 text-gray-700 hover:bg-gray-100;
 
-::ng-deep {
-  /* Sayfa açılış animasyonu */
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-out both;
-  }
-  /* Sol menü stilleri */
-  aside ul li {
-    @apply px-3 py-2 rounded cursor-pointer transition-all duration-200;
-  }
+      &.active {
+        @apply bg-blue-600 text-white font-medium;
 
-  aside ul li:hover {
-    @apply bg-blue-100 text-blue-700;
+        i {
+          @apply text-white;
+        }
+      }
+    }
   }
-
-  aside ul li.font-bold {
-    @apply bg-blue-600 text-white;
+  // Kart içeriği
+  p-card::ng-deep .p-card {
+    @apply rounded-xl shadow-md border border-gray-200;
   }
-  /* Float label inputlar */
-  .p-float-label {
-    position: relative;
-
+  // Kart başlıkları
+  .card-header {
+    @apply border-b border-gray-200 pb-4 mb-6;
+  }
+  // Form alanları
+  .field {
     label {
-      @apply absolute left-4 top-2 text-sm text-gray-500 transition-all duration-150 pointer-events-none;
+      @apply text-gray-700 text-sm;
     }
 
-    input:focus + label,
-    input:not(:placeholder-shown) + label,
-    textarea:focus + label,
-    textarea:not(:placeholder-shown) + label {
-      @apply -top-3.5 left-3 text-xs text-blue-600 bg-white dark:bg-gray-900 px-1;
-    }
-
-    input,
-    textarea {
-      @apply w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200;
+    input, textarea, .p-dropdown {
+      @apply mt-1 rounded-lg text-sm;
     }
   }
-  /* PrimeNG özel stiller */
-  .p-dropdown {
-    @apply w-full;
-  }
-
-  .p-checkbox .p-checkbox-box {
-    @apply border-gray-300 dark:border-gray-600 rounded;
-  }
-
-  .p-checkbox.p-highlight .p-checkbox-box {
-    @apply bg-blue-500 border-blue-500;
-  }
-
-  .p-checkbox-icon {
-    @apply text-white text-sm;
-  }
-  /* Tablo stilleri */
-  table {
-    @apply w-full border-collapse text-sm;
-
-    thead {
-      @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200;
-    }
-
-    th, td {
-      @apply px-4 py-3 border-b border-gray-200 dark:border-gray-700;
-    }
-
-    tbody tr {
-      @apply even:bg-gray-50 dark:even:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-900 transition;
-    }
-
-    input[type="checkbox"] {
-      @apply accent-blue-500 scale-110;
+  // Input switch stili
+  p-inputSwitch::ng-deep {
+    .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+      @apply bg-blue-600;
     }
   }
-  /* Kaydet Butonu */
-  button.p-button {
-    @apply rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg transition-all duration-300;
+  // Form alanları için özel stillendirme
+  .form-section {
+    @apply mb-8;
+  }
+  // Modül kartları
+  .module-card, .feature-item {
+    @apply transition-all duration-200;
+
+    &:hover {
+      @apply shadow-md;
+    }
+  }
+  // Önizleme bölümü
+  .preview-section {
+    @apply border border-gray-200;
+  }
+  // Beta özellikler
+  .feature-item {
+    @apply bg-white;
+  }
+  // Tema seçeneği
+  .theme-option {
+    &.selected-theme {
+      @apply border-blue-500 bg-blue-50;
+    }
+  }
+  // Kaydetme bekleme animation
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .saving-indicator {
+    animation: pulse 1.5s infinite;
+  }
+  // Değişiklik uyarısı
+  .unsaved-changes-alert {
+    p-chip::ng-deep .p-chip {
+      @apply bg-yellow-100 text-yellow-800;
+    }
   }
 }
+

@@ -1,14 +1,163 @@
-<div class="chat-container">
-  <div class="chat-card">
-    <div class="chat-box">
-      <div *ngFor="let message of messages" class="message" [ngClass]="message.from">
-        <span>{{ message.text }}</span>
+<div class="chatbot-container">
+  <!-- Bildirim ve Onay Dialogları -->
+  <p-toast position="top-right"></p-toast>
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+  <!-- Mobil Menü Butonu -->
+  <button *ngIf="activeConversation"
+          pButton
+          type="button"
+          icon="pi pi-bars"
+          class="mobile-menu-button p-button-rounded p-button-text"
+          (click)="toggleMobileSidebar()">
+    <span *ngIf="getUnreadCount() > 0" class="custom-badge">{{getUnreadCount()}}</span>
+  </button>
+
+  <!-- Ana İçerik -->
+  <div class="chatbot-main">
+    <!-- Konuşma Geçmişi Sidebar -->
+    <div class="conversations-sidebar" [class.active]="isMobileSidebarVisible">
+      <!-- Sidebar Header -->
+      <div class="sidebar-header">
+        <h3>Konuşma Geçmişi</h3>
+        <div class="sidebar-actions">
+          <button pButton type="button" icon="pi pi-plus" class="p-button-text p-button-sm"
+                  pTooltip="Yeni Konuşma" tooltipPosition="bottom" (click)="createNewConversation()"></button>
+          <p-menu #menu [model]="menuItems" [popup]="true"></p-menu>
+          <button pButton type="button" icon="pi pi-ellipsis-v" class="p-button-text p-button-sm"
+                  (click)="menu.toggle($event)"></button>
+        </div>
       </div>
+
+      <!-- Konuşma Listesi -->
+      <div class="conversation-list">
+        <ng-container *ngIf="conversations.length > 0; else noConversations">
+          <div *ngFor="let conversation of conversations"
+               class="conversation-item"
+               [class.active]="activeConversation?.id === conversation.id"
+               [class.unread]="conversation.unread"
+               (click)="setActiveConversation(conversation.id)">
+            <div class="conversation-content">
+              <div class="conversation-title">{{ conversation.title }}</div>
+              <div class="conversation-time">{{ getFormattedDate(conversation.timestamp) }}</div>
+            </div>
+            <button pButton type="button" icon="pi pi-trash"
+                    class="p-button-text p-button-rounded p-button-sm delete-btn"
+                    (click)="$event.stopPropagation(); deleteConversation(conversation.id)"></button>
+          </div>
+        </ng-container>
+        <ng-template #noConversations>
+          <div class="no-conversations">
+            <p>Henüz konuşma bulunmuyor</p>
+            <button pButton type="button" label="Yeni Konuşma Başlat"
+                    icon="pi pi-plus" (click)="createNewConversation()"></button>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Mobil Kapatma Butonu -->
+      <button pButton type="button" icon="pi pi-times"
+              class="close-sidebar p-button-rounded p-button-text"
+              (click)="toggleMobileSidebar()"></button>
     </div>
 
-    <div class="input-area">
-      <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Bir mesaj yazın..." />
-      <button (click)="sendMessage()">Gönder</button>
+    <!-- Sohbet Alanı -->
+    <div class="chat-area">
+      <!-- Aktif Konuşma Yoksa -->
+      <div *ngIf="!activeConversation" class="no-active-conversation">
+        <div class="welcome-message">
+          <h2>BskyCoach Chatbot</h2>
+          <p>Futbol kulübü yönetimi için akıllı asistanınız</p>
+          <button pButton type="button" label="Yeni Konuşma Başlat"
+                  icon="pi pi-plus" (click)="createNewConversation()"></button>
+        </div>
+      </div>
+
+      <!-- Aktif Konuşma Varsa -->
+      <div *ngIf="activeConversation" class="active-chat">
+        <!-- Sohbet Başlığı -->
+        <div class="chat-header">
+          <h3>{{ activeConversation.title }}</h3>
+        </div>
+
+        <!-- Mesajlar -->
+        <div class="chat-messages" #chatContainer>
+          <div *ngFor="let message of activeConversation.messages"
+               class="message-wrapper"
+               [class.user-message]="message.from === 'user'"
+               [class.bot-message]="message.from === 'bot'">
+
+            <!-- Bot Avatar -->
+            <div *ngIf="message.from === 'bot'" class="avatar">
+              <p-avatar icon="pi pi-robot" shape="circle" [style]="{'background-color': '#3B82F6', 'color': '#ffffff'}"></p-avatar>
+            </div>
+
+            <!-- Mesaj İçeriği -->
+            <div class="message" [class.loading]="message.isLoading">
+              <!-- Yükleniyor Durumu -->
+              <div *ngIf="message.isLoading" class="loading-content">
+                <p-skeleton width="100%" height="20px" styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="90%" height="20px" styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="60%" height="20px"></p-skeleton>
+              </div>
+
+              <!-- Mesaj Metni -->
+              <div *ngIf="!message.isLoading" class="message-text">
+                <div [innerHTML]="message.text | newlineToBr"></div>
+
+                <!-- Öneri Butonları -->
+                <div *ngIf="message.suggestions && message.suggestions.length > 0" class="message-suggestions">
+                  <p-chip *ngFor="let suggestion of message.suggestions"
+                          [label]="suggestion"
+                          (click)="useSuggestedQuery(suggestion)"
+                          styleClass="suggestion-chip"
+                          [style]="{'cursor': 'pointer'}"></p-chip>
+                </div>
+              </div>
+
+              <!-- Zaman Damgası -->
+              <div class="message-timestamp">
+                {{ message.timestamp | date:'HH:mm' }}
+              </div>
+            </div>
+
+            <!-- Kullanıcı Avatar -->
+            <div *ngIf="message.from === 'user'" class="avatar">
+              <p-avatar icon="pi pi-user" shape="circle" [style]="{'background-color': '#6366F1', 'color': '#ffffff'}"></p-avatar>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mesaj Gönderme Alanı -->
+        <div class="chat-input">
+          <div class="input-wrapper">
+            <textarea pInputTextarea
+                      [(ngModel)]="userInput"
+                      (keydown.enter)="$event.preventDefault(); sendMessage()"
+                      placeholder="Bir mesaj yazın..."
+                      [rows]="1"
+                      autoResize="true"
+                      #messageInput>
+            </textarea>
+            <button pButton type="button"
+                    icon="pi pi-send"
+                    [disabled]="!userInput.trim() || isLoading"
+                    [loading]="isLoading"
+                    (click)="sendMessage()"
+                    class="send-button">
+            </button>
+          </div>
+
+          <!-- Sorgu Önerileri -->
+          <div class="query-suggestions">
+            <p-chip *ngFor="let query of suggestedQueries"
+                    [label]="query"
+                    (click)="useSuggestedQuery(query)"
+                    styleClass="suggestion-chip"
+                    [style]="{'cursor': 'pointer'}"></p-chip>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

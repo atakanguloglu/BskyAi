@@ -1,122 +1,1071 @@
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-  <!-- Sol Menü -->
-  <aside class="bg-gray-100 p-4 rounded-xl shadow col-span-1">
-    <ul class="space-y-2 text-sm font-medium">
-      <li (click)="activeTab = 'club'" [class.font-bold]="activeTab === 'club'">🏟️ Kulüp Bilgileri</li>
-      <li (click)="activeTab = 'permissions'" [class.font-bold]="activeTab === 'permissions'">🔐 Yetkilendirme</li>
-      <li (click)="activeTab = 'preferences'" [class.font-bold]="activeTab === 'preferences'">🌟 Varsayılan Tercihler</li>
-      <li (click)="activeTab = 'notifications'" [class.font-bold]="activeTab === 'notifications'">📢 Bildirimler</li>
-      <li (click)="activeTab = 'backup'" [class.font-bold]="activeTab === 'backup'">📅 Yedekleme</li>
-      <li (click)="activeTab = 'advanced'" [class.font-bold]="activeTab === 'advanced'">🛠️ Gelişmiş</li>
-      <li (click)="activeTab = 'modules'" [class.font-bold]="activeTab === 'modules'">🧩 Modüller</li>
-      <li (click)="activeTab = 'beta'" [class.font-bold]="activeTab === 'beta'">🧪 Beta</li>
-      <li (click)="activeTab = 'feedback'" [class.font-bold]="activeTab === 'feedback'">📨 Geri Bildirim</li>
-    </ul>
-  </aside>
+<!-- Bildirim ve Onay Dialogları -->
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 
-  <!-- Sağ İçerik -->
-  <section class="col-span-3" [@fadeSlide]>
-    <div class="bg-white  shadow-xl p-6 space-y-6 animate-fade-in">
-      <ng-container *ngIf="activeTab === 'club'">
-        <h2 class="text-lg font-semibold mb-2">🏟️ Kulüp Bilgileri</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <span class="p-float-label"><input id="name" type="text" pInputText [(ngModel)]="club.name" placeholder=" " /><label for="name">Kulüp Adı</label></span>
-          <span class="p-float-label"><input id="founded" type="number" pInputText [(ngModel)]="club.founded" placeholder=" " /><label for="founded">Kuruluş Yılı</label></span>
-          <span class="p-float-label"><input id="country" type="text" pInputText [(ngModel)]="club.country" placeholder=" " /><label for="country">Ülke</label></span>
-          <span class="p-float-label"><input id="city" type="text" pInputText [(ngModel)]="club.city" placeholder=" " /><label for="city">Şehir</label></span>
-          <span class="p-float-label"><input id="stadium" type="text" pInputText [(ngModel)]="club.stadium" placeholder=" " /><label for="stadium">Stadyum</label></span>
-          <span class="p-float-label"><input id="colors" type="text" pInputText [(ngModel)]="club.colors" placeholder=" " /><label for="colors">Renkler</label></span>
-          <span class="p-float-label col-span-2"><input id="logoUrl" type="text" pInputText [(ngModel)]="club.logoUrl" placeholder=" " /><label for="logoUrl">Logo URL</label></span>
-          <span class="p-float-label col-span-2"><textarea id="about" rows="3" pInputTextarea [(ngModel)]="club.about" placeholder=" " class="resize-none"></textarea><label for="about">Kulüp Hakkında</label></span>
+<div class="settings-container">
+  <div class="header-section">
+    <h1 class="text-2xl font-semibold mb-2">⚙️ Sistem Ayarları</h1>
+    <p class="text-gray-600">Uygulama ayarlarınızı yapılandırın ve özelleştirin</p>
+  </div>
+
+  <!-- Ayarlar Ana Bölümü -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <!-- Sol Navigasyon -->
+    <aside class="bg-gradient-to-b from-gray-50 to-gray-100 p-4 rounded-xl shadow-md col-span-1 border border-gray-200">
+      <div class="search-box mb-4">
+        <span class="p-input-icon-right w-full">
+          <i class="pi pi-search"></i>
+          <input type="text" pInputText placeholder="Ayar ara..." class="w-full" />
+        </span>
+      </div>
+      
+      <div class="settings-navigation">
+        <ul class="space-y-2 text-sm font-medium">
+          <li (click)="activeTab = 'club'" 
+              [class.active]="activeTab === 'club'"
+              class="nav-item">
+            <i class="pi pi-shield mr-2"></i> Kulüp Bilgileri
+          </li>
+          <li (click)="activeTab = 'permissions'" 
+              [class.active]="activeTab === 'permissions'"
+              class="nav-item">
+            <i class="pi pi-lock mr-2"></i> Yetkilendirme
+          </li>
+          <li (click)="activeTab = 'preferences'" 
+              [class.active]="activeTab === 'preferences'"
+              class="nav-item">
+            <i class="pi pi-star mr-2"></i> Varsayılan Tercihler
+          </li>
+          <li (click)="activeTab = 'notifications'" 
+              [class.active]="activeTab === 'notifications'"
+              class="nav-item">
+            <i class="pi pi-bell mr-2"></i> Bildirimler
+          </li>
+          <li (click)="activeTab = 'backup'" 
+              [class.active]="activeTab === 'backup'"
+              class="nav-item">
+            <i class="pi pi-cloud-upload mr-2"></i> Yedekleme
+          </li>
+          <li (click)="activeTab = 'advanced'" 
+              [class.active]="activeTab === 'advanced'"
+              class="nav-item">
+            <i class="pi pi-cog mr-2"></i> Gelişmiş
+          </li>
+          <li (click)="activeTab = 'modules'" 
+              [class.active]="activeTab === 'modules'"
+              class="nav-item">
+            <i class="pi pi-th-large mr-2"></i> Modüller
+          </li>
+          <li (click)="activeTab = 'beta'" 
+              [class.active]="activeTab === 'beta'"
+              class="nav-item">
+            <i class="pi pi-flask mr-2"></i> Beta
+          </li>
+          <li (click)="activeTab = 'feedback'" 
+              [class.active]="activeTab === 'feedback'"
+              class="nav-item">
+            <i class="pi pi-envelope mr-2"></i> Geri Bildirim
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Sağ İçerik Alanı -->
+    <section class="col-span-3" [@fadeSlide]>
+      <p-card styleClass="settings-content-card">
+        <!-- Değişiklik Durumu Göstergesi -->
+        <div *ngIf="hasUnsavedChanges" class="unsaved-changes-alert mb-4">
+          <p-chip icon="pi pi-exclamation-circle" label="Kaydedilmemiş değişiklikler var"></p-chip>
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeTab === 'permissions'">
-        <h2 class="text-lg font-semibold mb-2">🔐 Yetkilendirme</h2>
-        <table class="w-full table-auto border text-sm">
-          <thead class="bg-gray-100 text-gray-800">
-            <tr><th class="p-3 text-left">Rol</th><th class="p-3 text-left">Düzenleyebilir mi?</th></tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let perm of permissions" class="even:bg-gray-50 hover:bg-blue-50 transition">
-              <td class="p-3">{{ perm.role }}</td>
-              <td class="p-3"><input type="checkbox" [(ngModel)]="perm.canEdit" class="accent-blue-500 scale-110" /></td>
-            </tr>
-          </tbody>
-        </table>
-      </ng-container>
-      <ng-container *ngIf="activeTab === 'preferences'">
-        <h2 class="text-lg font-semibold mb-2">🌟 Varsayılan Tercihler</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <p-dropdown [options]="formationOptions" [(ngModel)]="defaultPreferences.defaultFormation" placeholder="Diziliş Seçin" class="w-full" />
-          <p-dropdown [options]="homepageOptions" [(ngModel)]="defaultPreferences.homepage" optionLabel="label" placeholder="Ana Sayfa" class="w-full" />
-          <p-dropdown [options]="languageOptions" [(ngModel)]="defaultPreferences.defaultLanguage" placeholder="Dil Seçimi" class="w-full" />
-          <p-checkbox [(ngModel)]="defaultPreferences.showHints" binary="true" label="İpuçlarını Göster" />
-          <p-checkbox [(ngModel)]="defaultPreferences.autoSave" binary="true" label="Otomatik Kaydet" />
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeTab === 'notifications'">
-        <h2 class="text-lg font-semibold mb-2">📢 Bildirim Ayarları</h2>
-        <div class="space-y-3">
-          <p-checkbox [(ngModel)]="notifications.newSuggestions" binary="true" label="Yeni önerilerden haberdar et" />
-          <p-checkbox [(ngModel)]="notifications.weeklySummaryEmail" binary="true" label="Haftalık özet e-postası gönder" />
-          <p-checkbox [(ngModel)]="notifications.matchDayReminders" binary="true" label="Maç günü hatırlatıcıları" />
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeTab === 'backup'">
-        <h2 class="text-lg font-semibold mb-2">📅 Yedekleme & Dışa Aktarım</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <p-dropdown [options]="exportFormats" [(ngModel)]="backups.exportFormat" placeholder="Dışa Aktarma Formatı" class="w-full" />
-          <p-dropdown [options]="backupFrequencies" [(ngModel)]="backups.autoBackupFrequency" placeholder="Yedekleme Sıklığı" class="w-full" />
-          <div class="flex items-center gap-2 mt-2">
-            <input type="checkbox" [(ngModel)]="backups.autoBackupEnabled" class="accent-blue-500" />
-            Otomatik Yedekleme
+        
+        <!-- Kulüp Bilgileri -->
+        <div *ngIf="activeTab === 'club'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-shield mr-2"></i> Kulüp Bilgileri
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Kulübünüzün temel bilgilerini düzenleyin
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="field">
+              <label for="clubName" class="block font-medium mb-2">Kulüp Adı</label>
+              <input id="clubName" type="text" pInputText [(ngModel)]="club.name" 
+                     (ngModelChange)="checkChanges()" />
+            </div>
+            
+            <div class="field">
+              <label for="founded" class="block font-medium mb-2">Kuruluş Yılı</label>
+              <input id="founded" type="number" pInputText [(ngModel)]="club.founded" 
+                     (ngModelChange)="checkChanges()" />
+            </div>
+            
+            <div class="field">
+              <label for="country" class="block font-medium mb-2">Ülke</label>
+              <input id="country" type="text" pInputText [(ngModel)]="club.country" 
+                     (ngModelChange)="checkChanges()" />
+            </div>
+            
+            <div class="field">
+              <label for="city" class="block font-medium mb-2">Şehir</label>
+              <input id="city" type="text" pInputText [(ngModel)]="club.city" 
+                     (ngModelChange)="checkChanges()" />
+            </div>
+            
+            <div class="field">
+              <label for="stadium" class="block font-medium mb-2">Stadyum</label>
+              <input id="stadium" type="text" pInputText [(ngModel)]="club.stadium" 
+                     (ngModelChange)="checkChanges()" />
+            </div>
+            
+            <div class="field">
+              <label for="colors" class="block font-medium mb-2">Renkler</label>
+              <input id="colors" type="text" pInputText [(ngModel)]="club.colors" 
+                     (ngModelChange)="checkChanges()" />
+            </div>
+            
+            <div class="field col-span-2">
+              <label for="logoUrl" class="block font-medium mb-2">Logo URL</label>
+              <div class="p-inputgroup">
+                <input id="logoUrl" type="text" pInputText [(ngModel)]="club.logoUrl" 
+                       (ngModelChange)="checkChanges()" />
+                <button type="button" pButton icon="pi pi-upload" label="Yükle"></button>
+              </div>
+            </div>
+            
+            <div class="field col-span-2">
+              <label for="about" class="block font-medium mb-2">Kulüp Hakkında</label>
+              <textarea id="about" pInputTextarea [(ngModel)]="club.about" 
+                        (ngModelChange)="checkChanges()" rows="5"></textarea>
+            </div>
+          </div>
+          
+          <div class="preview-section mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 class="font-medium mb-2">Önizleme</h3>
+            <div class="flex items-center gap-4">
+              <div class="logo-preview w-16 h-16 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
+                <img *ngIf="club.logoUrl" [src]="club.logoUrl" alt="Logo" class="max-w-full max-h-full" />
+                <i *ngIf="!club.logoUrl" class="pi pi-image text-gray-400 text-xl"></i>
+              </div>
+              <div>
+                <h4 class="font-bold">{{ club.name || 'Kulüp Adı' }}</h4>
+                <p class="text-sm text-gray-600">{{ club.city || 'Şehir' }}, {{ club.country || 'Ülke' }}</p>
+                <p class="text-xs text-gray-500">Est. {{ club.founded || 'YYYY' }}</p>
+              </div>
+            </div>
           </div>
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeTab === 'advanced'">
-        <h2 class="text-lg font-semibold mb-2">🛠️ Gelişmiş Ayarlar</h2>
-        <div class="space-y-3">
-          <p-checkbox [(ngModel)]="advanced.enableLogs" binary="true" label="Loglama Aktif" />
-          <p-checkbox [(ngModel)]="advanced.developerMode" binary="true" label="Geliştirici Modu" />
+        
+        <!-- Yetkilendirme -->
+        <div *ngIf="activeTab === 'permissions'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-lock mr-2"></i> Yetkilendirme
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Sistem kullanıcılarının erişim yetkilerini düzenleyin
+            </p>
+          </div>
+          
+          <p-table [value]="permissions" styleClass="p-datatable-sm" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Rol</th>
+                <th>Erişim Seviyesi</th>
+                <th>Düzenleyebilir mi?</th>
+                <th>Aksiyonlar</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-perm>
+              <tr>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-user text-blue-600"></i>
+                    <span>{{ perm.role }}</span>
+                  </div>
+                </td>
+                <td>
+                  <p-dropdown [options]="['Tam Erişim', 'Sınırlı Erişim', 'Salt Okunur']" 
+                              placeholder="Erişim Seviyesi" 
+                              appendTo="body"></p-dropdown>
+                </td>
+                <td>
+                  <p-inputSwitch [(ngModel)]="perm.canEdit" (onChange)="checkChanges()"></p-inputSwitch>
+                </td>
+                <td>
+                  <button pButton icon="pi pi-pencil" 
+                          class="p-button-text p-button-sm"></button>
+                  <button pButton icon="pi pi-trash" 
+                          class="p-button-text p-button-danger p-button-sm"></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          
+          <div class="mt-4">
+            <button pButton icon="pi pi-plus" label="Yeni Rol Ekle" 
+                    class="p-button-outlined"></button>
+          </div>
+          
+          <p-divider></p-divider>
+          
+          <div class="field-group mt-4">
+            <h3 class="font-medium mb-3">Günlük İzinleri</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-field-checkbox">
+                <p-checkbox name="accessLogs" binary="true" label="Erişim Loglarını Göster"></p-checkbox>
+              </div>
+              <div class="p-field-checkbox">
+                <p-checkbox name="errorLogs" binary="true" label="Hata Loglarını Göster"></p-checkbox>
+              </div>
+              <div class="p-field-checkbox">
+                <p-checkbox name="adminLogs" binary="true" label="Admin İşlem Logları"></p-checkbox>
+              </div>
+            </div>
+          </div>
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeTab === 'modules'">
-        <h2 class="text-lg font-semibold mb-2">🧩 Modül Aktifleştirme</h2>
-        <div class="space-y-3">
-          <p-checkbox [(ngModel)]="modules.chatbot" binary="true" label="Chatbot Modülü" />
-          <p-checkbox [(ngModel)]="modules.matchAnalysis" binary="true" label="Rakip Analiz Modülü" />
-          <p-checkbox [(ngModel)]="modules.healthTracking" binary="true" label="Sağlık Takip Modülü" />
+        
+        <!-- Varsayılan Tercihler -->
+        <div *ngIf="activeTab === 'preferences'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-star mr-2"></i> Varsayılan Tercihler
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Sistem genelinde kullanılacak varsayılan ayarları belirleyin
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="field">
+              <label for="defaultFormation" class="block font-medium mb-2">Varsayılan Diziliş</label>
+              <p-dropdown [options]="formationOptions" 
+                          [(ngModel)]="defaultPreferences.defaultFormation" 
+                          (onChange)="checkChanges()"
+                          placeholder="Diziliş Seçin" 
+                          [style]="{'width':'100%'}" 
+                          appendTo="body"></p-dropdown>
+            </div>
+            
+            <div class="field">
+              <label for="homePage" class="block font-medium mb-2">Ana Sayfa</label>
+              <p-dropdown [options]="homepageOptions" 
+                          [(ngModel)]="defaultPreferences.homepage" 
+                          (onChange)="checkChanges()"
+                          optionLabel="label" 
+                          optionValue="value"
+                          placeholder="Ana Sayfa" 
+                          [style]="{'width':'100%'}" 
+                          appendTo="body"></p-dropdown>
+            </div>
+            
+            <div class="field">
+              <label for="language" class="block font-medium mb-2">Varsayılan Dil</label>
+              <p-dropdown [options]="languageOptions" 
+                          [(ngModel)]="defaultPreferences.defaultLanguage" 
+                          (onChange)="checkChanges()"
+                          placeholder="Dil Seçimi" 
+                          [style]="{'width':'100%'}" 
+                          appendTo="body"></p-dropdown>
+            </div>
+            
+            <div class="field flex flex-col justify-end">
+              <div class="field-checkbox mt-6">
+                <p-checkbox [(ngModel)]="defaultPreferences.showHints" 
+                           binary="true" 
+                           (onChange)="checkChanges()"
+                           inputId="showHints"></p-checkbox>
+                <label for="showHints" class="ml-2">İpuçlarını Göster</label>
+              </div>
+              
+              <div class="field-checkbox mt-3">
+                <p-checkbox [(ngModel)]="defaultPreferences.autoSave" 
+                           binary="true" 
+                           (onChange)="checkChanges()"
+                           inputId="autoSave"></p-checkbox>
+                <label for="autoSave" class="ml-2">Otomatik Kaydet</label>
+              </div>
+            </div>
+          </div>
+          
+          <p-divider></p-divider>
+          
+          <div class="field-group mt-4">
+            <h3 class="font-medium mb-3">Arayüz Ayarları</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="field">
+                <label class="block font-medium mb-2">Tema</label>
+                <div class="flex gap-3">
+                  <div class="theme-option cursor-pointer p-3 border rounded-lg flex flex-col items-center hover:border-blue-500 transition-colors" [class.selected-theme]="true">
+                    <div class="bg-blue-500 w-12 h-8 rounded mb-2"></div>
+                    <span class="text-sm">Mavi</span>
+                  </div>
+                  <div class="theme-option cursor-pointer p-3 border rounded-lg flex flex-col items-center hover:border-blue-500 transition-colors">
+                    <div class="bg-green-500 w-12 h-8 rounded mb-2"></div>
+                    <span class="text-sm">Yeşil</span>
+                  </div>
+                  <div class="theme-option cursor-pointer p-3 border rounded-lg flex flex-col items-center hover:border-blue-500 transition-colors">
+                    <div class="bg-purple-500 w-12 h-8 rounded mb-2"></div>
+                    <span class="text-sm">Mor</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="field">
+                <label class="block font-medium mb-2">Font Boyutu</label>
+                <div class="flex gap-3">
+                  <button pButton label="Küçük" class="p-button-sm p-button-outlined"></button>
+                  <button pButton label="Orta" class="p-button-sm"></button>
+                  <button pButton label="Büyük" class="p-button-sm p-button-outlined"></button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeTab === 'beta'">
-        <h2 class="text-lg font-semibold mb-2">🧪 Beta / Test Özellikleri</h2>
-        <div class="space-y-3">
-          <p-checkbox [(ngModel)]="beta.enableExperimentalFeatures" binary="true" label="Deneysel Özellikleri Aktifleştir" />
-          <p-checkbox [(ngModel)]="beta.autoFormationAI" binary="true" label="Otomatik Diziliş AI" />
-          <p-checkbox [(ngModel)]="beta.chemistryPrediction" binary="true" label="Kimya Tahmini" />
+        
+        <!-- Bildirimler -->
+        <div *ngIf="activeTab === 'notifications'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-bell mr-2"></i> Bildirim Ayarları
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Bildirim tercihlerinizi ve iletişim kanallarını yapılandırın
+            </p>
+          </div>
+          
+          <div class="notification-settings">
+            <h3 class="font-medium mb-3">Uygulama Bildirimleri</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-field-checkbox">
+                <div class="flex items-start">
+                  <p-inputSwitch [(ngModel)]="notifications.newSuggestions" 
+                                (onChange)="checkChanges()"></p-inputSwitch>
+                  <div class="ml-3">
+                    <label class="font-medium block mb-1">Yeni Öneriler</label>
+                    <span class="text-xs text-gray-600">Yapay zeka yeni öneriler oluşturduğunda bildirim alın</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="p-field-checkbox">
+                <div class="flex items-start">
+                  <p-inputSwitch [(ngModel)]="notifications.weeklySummaryEmail" 
+                                (onChange)="checkChanges()"></p-inputSwitch>
+                  <div class="ml-3">
+                    <label class="font-medium block mb-1">Haftalık Özet E-postaları</label>
+                    <span class="text-xs text-gray-600">Her hafta sistem özetini e-posta olarak alın</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="p-field-checkbox">
+                <div class="flex items-start">
+                  <p-inputSwitch [(ngModel)]="notifications.matchDayReminders" 
+                                (onChange)="checkChanges()"></p-inputSwitch>
+                  <div class="ml-3">
+                    <label class="font-medium block mb-1">Maç Günü Hatırlatıcıları</label>
+                    <span class="text-xs text-gray-600">Yaklaşan maçlar için hatırlatıcı alın</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <p-divider></p-divider>
+            
+            <h3 class="font-medium my-3">İletişim Kanalları</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="field">
+                <label for="emailNotification" class="block font-medium mb-2">E-posta Adresi</label>
+                <div class="p-inputgroup">
+                  <input id="emailNotification" type="email" pInputText placeholder="ornek@mail.com" />
+                  <button type="button" pButton icon="pi pi-check" label="Doğrula"></button>
+                </div>
+              </div>
+              
+              <div class="field">
+                <label for="phoneNotification" class="block font-medium mb-2">Telefon Numarası</label>
+                <div class="p-inputgroup">
+                  <input id="phoneNotification" type="tel" pInputText placeholder="+90 555 123 4567" />
+                  <button type="button" pButton icon="pi pi-check" label="Doğrula"></button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="notification-channels mt-4">
+              <h4 class="font-medium mb-2">Bildirim Alma Yöntemleri</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="method-card p-3 border rounded-lg hover:border-blue-500 cursor-pointer transition-colors">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <i class="pi pi-envelope text-blue-600 mr-2"></i>
+                      <span>E-posta</span>
+                    </div>
+                    <p-checkbox binary="true"></p-checkbox>
+                  </div>
+                </div>
+                
+                <div class="method-card p-3 border rounded-lg hover:border-blue-500 cursor-pointer transition-colors">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <i class="pi pi-mobile text-blue-600 mr-2"></i>
+                      <span>SMS</span>
+                    </div>
+                    <p-checkbox binary="true"></p-checkbox>
+                  </div>
+                </div>
+                
+                <div class="method-card p-3 border rounded-lg hover:border-blue-500 cursor-pointer transition-colors">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <i class="pi pi-desktop text-blue-600 mr-2"></i>
+                      <span>Uygulama</span>
+                    </div>
+                    <p-checkbox binary="true"></p-checkbox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeTab === 'feedback'">
-        <h2 class="text-lg font-semibold mb-2">📨 Geri Bildirim</h2>
-        <div class="space-y-4">
-          <span class="p-float-label"><input pInputText id="email" [(ngModel)]="feedback.email" placeholder=" " /><label for="email">E-Posta (isteğe bağlı)</label></span>
-          <span class="p-float-label"><textarea pInputTextarea id="message" [(ngModel)]="feedback.message" rows="4" class="w-full resize-none" placeholder=" "></textarea><label for="message">Geri Bildiriminiz</label></span>
+        
+        <!-- Yedekleme -->
+        <div *ngIf="activeTab === 'backup'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-cloud-upload mr-2"></i> Yedekleme & Dışa Aktarım
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Verilerinizi yedekleyin ve dışa aktarın
+            </p>
+          </div>
+          
+          <div class="backup-settings">
+            <h3 class="font-medium mb-3">Otomatik Yedekleme</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="field-checkbox flex items-start">
+                <p-inputSwitch [(ngModel)]="backups.autoBackupEnabled" 
+                              (onChange)="checkChanges()"></p-inputSwitch>
+                <div class="ml-3">
+                  <label class="font-medium block mb-1">Otomatik Yedekleme</label>
+                  <span class="text-xs text-gray-600">Sistem ayarlarda belirlenen sıklıkta otomatik yedeklenir</span>
+                </div>
+              </div>
+              
+              <div class="field">
+                <label for="backupFrequency" class="block font-medium mb-2">Yedekleme Sıklığı</label>
+                <p-dropdown [options]="backupFrequencies" 
+                            [(ngModel)]="backups.autoBackupFrequency" 
+                            (onChange)="checkChanges()"
+                            [style]="{'width':'100%'}" 
+                            appendTo="body"
+                            [disabled]="!backups.autoBackupEnabled"></p-dropdown>
+              </div>
+            </div>
+            
+            <div class="field mt-4">
+              <label for="backupLocation" class="block font-medium mb-2">Yedekleme Konumu</label>
+              <div class="p-inputgroup">
+                <input id="backupLocation" type="text" pInputText placeholder="/path/to/backup/folder" value="/var/backups/bskycoach/" />
+                <button type="button" pButton icon="pi pi-folder-open" label="Gözat"></button>
+              </div>
+            </div>
+            
+            <p-divider></p-divider>
+            
+            <h3 class="font-medium my-3">Manuel Yedekleme</h3>
+            <div class="manual-backup">
+              <div class="field mb-4">
+                <label for="exportFormat" class="block font-medium mb-2">Dışa Aktarma Formatı</label>
+                <p-dropdown [options]="exportFormats" 
+                            [(ngModel)]="backups.exportFormat" 
+                            (onChange)="checkChanges()"
+                            [style]="{'width':'100%'}" 
+                            appendTo="body"></p-dropdown>
+              </div>
+              
+              <div class="field-checkbox mb-4">
+                <p-checkbox binary="true" inputId="includeMedia"></p-checkbox>
+                <label for="includeMedia" class="ml-2">Medya Dosyalarını Dahil Et</label>
+              </div>
+              
+              <div class="actions flex gap-3">
+                <button pButton icon="pi pi-download" label="Şimdi Yedekle" class="p-button-primary"></button>
+                <button pButton icon="pi pi-upload" label="Yedekten Geri Yükle" class="p-button-secondary"></button>
+              </div>
+            </div>
+            
+            <div class="backup-history mt-6">
+              <h3 class="font-medium mb-3">Yedekleme Geçmişi</h3>
+              <p-table [value]="[
+                          {date: '2025-04-15 14:30', size: '12.5 MB', type: 'Otomatik', status: 'Başarılı'},
+                          {date: '2025-04-08 10:15', size: '11.8 MB', type: 'Otomatik', status: 'Başarılı'},
+                          {date: '2025-04-01 09:45', size: '11.2 MB', type: 'Manuel', status: 'Başarılı'}
+                        ]" 
+                        styleClass="p-datatable-sm" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Tarih</th>
+                    <th>Boyut</th>
+                    <th>Tip</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-backup>
+                  <tr>
+                    <td>{{ backup.date }}</td>
+                    <td>{{ backup.size }}</td>
+                    <td>
+                      <p-chip [label]="backup.type" 
+                             [icon]="backup.type === 'Otomatik' ? 'pi pi-clock' : 'pi pi-user'" 
+                             [styleClass]="backup.type === 'Otomatik' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'"></p-chip>
+                    </td>
+                    <td>
+                      <p-chip label="Başarılı" icon="pi pi-check" styleClass="bg-green-100 text-green-700"></p-chip>
+                    </td>
+                    <td>
+                      <button pButton icon="pi pi-download" 
+                              class="p-button-text p-button-sm"></button>
+                      <button pButton icon="pi pi-trash" 
+                              class="p-button-text p-button-danger p-button-sm"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
         </div>
-      </ng-container>
-    </div>
-  </section>
+        
+        <!-- Gelişmiş Ayarlar -->
+        <div *ngIf="activeTab === 'advanced'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-cog mr-2"></i> Gelişmiş Ayarlar
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Sistem için gelişmiş yapılandırma seçenekleri
+            </p>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+              <div class="flex">
+                <i class="pi pi-exclamation-triangle text-yellow-500 mt-0.5 mr-3"></i>
+                <div>
+                  <p class="font-medium text-yellow-800">Dikkat</p>
+                  <p class="text-sm text-yellow-700">
+                    Bu bölümdeki ayarları değiştirmek sistemin performansını ve davranışını etkileyebilir. 
+                    Ne yaptığınızdan emin değilseniz varsayılan ayarları korumanız önerilir.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="advanced-settings">
+            <h3 class="font-medium mb-3">Sistem Performansı</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="field-checkbox flex items-start">
+                <p-inputSwitch [(ngModel)]="advanced.enableLogs" 
+                              (onChange)="checkChanges()"></p-inputSwitch>
+                <div class="ml-3">
+                  <label class="font-medium block mb-1">Loglama Aktif</label>
+                  <span class="text-xs text-gray-600">Sistem loglarını detaylı şekilde kaydet</span>
+                </div>
+              </div>
+              
+              <div class="field-checkbox flex items-start">
+                <p-inputSwitch [(ngModel)]="advanced.developerMode" 
+                              (onChange)="checkChanges()"></p-inputSwitch>
+                <div class="ml-3">
+                  <label class="font-medium block mb-1">Geliştirici Modu</label>
+                  <span class="text-xs text-gray-600">Hata ayıklama ve geliştirme özelliklerini etkinleştir</span>
+                </div>
+              </div>
+            </div>
+            
+            <p-divider></p-divider>
+            
+            <h3 class="font-medium my-3">Ön Bellek ve Veritabanı</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="field">
+                <label class="block font-medium mb-2">Ön Bellek Boyutu</label>
+                <p-dropdown [options]="['100 MB', '200 MB', '500 MB', '1 GB']" 
+                            placeholder="Ön Bellek Boyutu" 
+                            [style]="{'width':'100%'}" 
+                            appendTo="body"></p-dropdown>
+              </div>
+              
+              <div class="field">
+                <label class="block font-medium mb-2">Veri Saklama Süresi</label>
+                <p-dropdown [options]="['30 Gün', '60 Gün', '90 Gün', 'Sınırsız']" 
+                            placeholder="Veri Saklama Süresi" 
+                            [style]="{'width':'100%'}" 
+                            appendTo="body"></p-dropdown>
+              </div>
+            </div>
+            
+            <div class="caching-actions mt-4 flex flex-wrap gap-3">
+              <button pButton icon="pi pi-refresh" label="Önbelleği Temizle" class="p-button-outlined"></button>
+              <button pButton icon="pi pi-database" label="Veritabanını Optimize Et" class="p-button-outlined"></button>
+              <button pButton icon="pi pi-eraser" label="Geçici Dosyaları Temizle" class="p-button-outlined"></button>
+            </div>
+            
+            <p-divider></p-divider>
+            
+            <h3 class="font-medium my-3">Yapay Zeka Ayarları</h3>
+            <div class="grid grid-cols-1 gap-4">
+              <div class="field">
+                <label class="block font-medium mb-2">Yapay Zeka İşlem Önceliği</label>
+                <p-slider [(ngModel)]="aiPriority" [min]="1" [max]="10" [step]="1" styleClass="w-full"></p-slider>
+                <div class="flex justify-between text-xs text-gray-600 mt-1">
+                  <span>Düşük (Arka Planda)</span>
+                  <span>Yüksek (Gerçek Zamanlı)</span>
+                </div>
+              </div>
+              
+              <div class="field">
+                <label class="block font-medium mb-2">Tahmin Hassasiyeti</label>
+                <div class="flex items-center">
+                  <p-slider [(ngModel)]="predictionAccuracy" [min]="1" [max]="10" [step]="1" styleClass="w-full"></p-slider>
+                  <span class="ml-4 text-lg font-bold">{{ predictionAccuracy }}</span>
+                </div>
+                <div class="flex justify-between text-xs text-gray-600 mt-1">
+                  <span>Hızlı, Daha Az Hassas</span>
+                  <span>Yavaş, Daha Hassas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modüller -->
+        <div *ngIf="activeTab === 'modules'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-th-large mr-2"></i> Modül Aktifleştirme
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Sistemdeki farklı modülleri etkinleştirin veya devre dışı bırakın
+            </p>
+          </div>
+          
+          <div class="modules-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Chatbot Modülü -->
+            <div class="module-card p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                    <i class="pi pi-comments text-blue-600"></i>
+                  </div>
+                  <h3 class="font-medium">Chatbot</h3>
+                </div>
+                <p-inputSwitch [(ngModel)]="modules.chatbot" 
+                              (onChange)="checkChanges()"></p-inputSwitch>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">
+                Kullanıcılar için yapay zeka destekli sohbet asistanı
+              </p>
+              <div class="module-status flex items-center text-xs">
+                <p-chip *ngIf="modules.chatbot" label="Aktif" icon="pi pi-check" styleClass="bg-green-100 text-green-700"></p-chip>
+                <p-chip *ngIf="!modules.chatbot" label="Pasif" icon="pi pi-times" styleClass="bg-gray-100 text-gray-700"></p-chip>
+                <span *ngIf="modules.chatbot" class="ml-2 text-gray-500">v1.2.0</span>
+              </div>
+            </div>
+            
+            <!-- Rakip Analiz Modülü -->
+            <div class="module-card p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                    <i class="pi pi-chart-line text-purple-600"></i>
+                  </div>
+                  <h3 class="font-medium">Rakip Analizi</h3>
+                </div>
+                <p-inputSwitch [(ngModel)]="modules.matchAnalysis" 
+                              (onChange)="checkChanges()"></p-inputSwitch>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">
+                Rakiplerin detaylı analizini ve karşılaştırmasını yapın
+              </p>
+              <div class="module-status flex items-center text-xs">
+                <p-chip *ngIf="modules.matchAnalysis" label="Aktif" icon="pi pi-check" styleClass="bg-green-100 text-green-700"></p-chip>
+                <p-chip *ngIf="!modules.matchAnalysis" label="Pasif" icon="pi pi-times" styleClass="bg-gray-100 text-gray-700"></p-chip>
+                <span *ngIf="modules.matchAnalysis" class="ml-2 text-gray-500">v2.1.0</span>
+              </div>
+            </div>
+            
+            <!-- Sağlık Takip Modülü -->
+            <div class="module-card p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                    <i class="pi pi-heart text-red-600"></i>
+                  </div>
+                  <h3 class="font-medium">Sağlık Takibi</h3>
+                </div>
+                <p-inputSwitch [(ngModel)]="modules.healthTracking" 
+                              (onChange)="checkChanges()"></p-inputSwitch>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">
+                Oyuncuların sağlık durumlarını ve sakatlık geçmişlerini takip edin
+              </p>
+              <div class="module-status flex items-center text-xs">
+                <p-chip *ngIf="modules.healthTracking" label="Aktif" icon="pi pi-check" styleClass="bg-green-100 text-green-700"></p-chip>
+                <p-chip *ngIf="!modules.healthTracking" label="Pasif" icon="pi pi-times" styleClass="bg-gray-100 text-gray-700"></p-chip>
+                <span *ngIf="modules.healthTracking" class="ml-2 text-gray-500">v1.5.0</span>
+              </div>
+            </div>
+            
+            <!-- Taktik Tahtası Modülü -->
+            <div class="module-card p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                    <i class="pi pi-pencil text-green-600"></i>
+                  </div>
+                  <h3 class="font-medium">Taktik Tahtası</h3>
+                </div>
+                <p-inputSwitch [(ngModel)]="tacticBoardEnabled" 
+                              (onChange)="checkChanges()"></p-inputSwitch>
+              </div>
+              <p class="text-sm text-gray-600 mb-3">
+                Taktiksel planlar oluşturun ve diziliş şemalarını çizin
+              </p>
+              <div class="module-status flex items-center text-xs">
+                <p-chip label="Premium" icon="pi pi-star" styleClass="bg-yellow-100 text-yellow-700"></p-chip>
+                <span class="ml-2 text-gray-500">v2.0.0</span>
+              </div>
+            </div>
+          </div>
+          
+          <p-divider></p-divider>
+          
+          <div class="marketplace mt-4">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-medium">Ek Modüller</h3>
+              <button pButton icon="pi pi-plus" label="Daha Fazla Modül" class="p-button-sm"></button>
+            </div>
+            
+            <div class="available-modules grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="module-item p-3 border rounded-lg bg-gray-50 hover:bg-white transition-colors cursor-pointer">
+                <div class="flex items-center">
+                  <i class="pi pi-dollar text-orange-500 mr-2"></i>
+                  <span class="font-medium">Finansal Yönetim</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">Bütçe ve harcama takibi</p>
+              </div>
+              
+              <div class="module-item p-3 border rounded-lg bg-gray-50 hover:bg-white transition-colors cursor-pointer">
+                <div class="flex items-center">
+                  <i class="pi pi-calendar text-blue-500 mr-2"></i>
+                  <span class="font-medium">Etkinlik Planlama</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">Takvim ve etkinlik organizasyonu</p>
+              </div>
+              
+              <div class="module-item p-3 border rounded-lg bg-gray-50 hover:bg-white transition-colors cursor-pointer">
+                <div class="flex items-center">
+                  <i class="pi pi-ticket text-purple-500 mr-2"></i>
+                  <span class="font-medium">Bilet Yönetimi</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">Taraftar biletleri ve abonelikler</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Beta -->
+        <div *ngIf="activeTab === 'beta'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-flask mr-2"></i> Beta / Test Özellikleri
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Henüz test aşamasındaki deneysel özellikleri deneyin
+            </p>
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+              <div class="flex">
+                <i class="pi pi-info-circle text-blue-500 mt-0.5 mr-3"></i>
+                <div>
+                  <p class="font-medium text-blue-800">Beta Özellikleri Hakkında</p>
+                  <p class="text-sm text-blue-700">
+                    Beta özellikleri geliştirme aşamasındadır ve kararlı çalışmayabilir.
+                    Bu özellikler değişebilir, kaldırılabilir veya ilerleyen sürümlerde resmi olarak eklenebilir.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="beta-features">
+            <div class="grid grid-cols-1 gap-6">
+              <!-- Ana Beta Özelliği Kartı -->
+              <div class="feature-card p-5 border rounded-lg shadow-sm bg-gradient-to-br from-blue-50 to-purple-50">
+                <div class="flex justify-between items-center mb-4">
+                  <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                      <i class="pi pi-cog text-indigo-600 text-lg"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-medium">Deneysel Özellikleri Aktifleştir</h3>
+                      <p class="text-xs text-gray-600">Tüm beta özelliklerini tek seferde açın</p>
+                    </div>
+                  </div>
+                  <p-inputSwitch [(ngModel)]="beta.enableExperimentalFeatures" 
+                              (onChange)="checkChanges()"></p-inputSwitch>
+                </div>
+                
+                <p class="text-sm text-gray-700 mb-4">
+                  Bu seçeneği etkinleştirmek, aşağıdaki tüm beta özelliklerini otomatik olarak açacaktır.
+                  Her özelliği ayrı ayrı kontrol etmek için aşağıdaki ayarları kullanabilirsiniz.
+                </p>
+                
+                <div class="beta-status flex items-center gap-2">
+                  <p-chip label="Beta" icon="pi pi-filter" styleClass="bg-indigo-100 text-indigo-700"></p-chip>
+                  <span class="text-xs text-gray-500">Son Güncelleme: 15 Nisan 2025</span>
+                </div>
+              </div>
+              
+              <!-- Beta Özellikleri Listesi -->
+              <div class="features-list">
+                <h3 class="font-medium mb-3">Mevcut Beta Özellikleri</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Otomatik Diziliş AI -->
+                  <div class="feature-item p-4 border rounded-lg hover:border-indigo-300 transition-colors">
+                    <div class="flex justify-between items-center mb-2">
+                      <div class="flex items-center">
+                        <i class="pi pi-sitemap text-indigo-500 mr-2"></i>
+                        <h4 class="font-medium">Otomatik Diziliş AI</h4>
+                      </div>
+                      <p-inputSwitch [(ngModel)]="beta.autoFormationAI" 
+                                    (onChange)="checkChanges()"
+                                    [disabled]="!beta.enableExperimentalFeatures"></p-inputSwitch>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2">
+                      Yapay zeka ile en uyumlu takım dizilişinin otomatik oluşturulması
+                    </p>
+                    <div class="feature-meta flex items-center justify-between">
+                      <p-chip label="v0.7" styleClass="bg-gray-100 text-xs"></p-chip>
+                      <span class="text-xs text-indigo-500 cursor-pointer hover:underline">Daha Fazla Bilgi</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Kimya Tahmini -->
+                  <div class="feature-item p-4 border rounded-lg hover:border-indigo-300 transition-colors">
+                    <div class="flex justify-between items-center mb-2">
+                      <div class="flex items-center">
+                        <i class="pi pi-chart-pie text-indigo-500 mr-2"></i>
+                        <h4 class="font-medium">Kimya Tahmini</h4>
+                      </div>
+                      <p-inputSwitch [(ngModel)]="beta.chemistryPrediction" 
+                                    (onChange)="checkChanges()"
+                                    [disabled]="!beta.enableExperimentalFeatures"></p-inputSwitch>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2">
+                      Oyuncular arası uyum düzeyinin makine öğrenmesi ile tahmin edilmesi
+                    </p>
+                    <div class="feature-meta flex items-center justify-between">
+                      <p-chip label="v0.9" styleClass="bg-gray-100 text-xs"></p-chip>
+                      <span class="text-xs text-indigo-500 cursor-pointer hover:underline">Daha Fazla Bilgi</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Transfer Önerisi AI -->
+                  <div class="feature-item p-4 border rounded-lg hover:border-indigo-300 transition-colors">
+                    <div class="flex justify-between items-center mb-2">
+                      <div class="flex items-center">
+                        <i class="pi pi-sync text-indigo-500 mr-2"></i>
+                        <h4 class="font-medium">Transfer Önerisi AI</h4>
+                      </div>
+                      <p-inputSwitch [disabled]="!beta.enableExperimentalFeatures"></p-inputSwitch>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2">
+                      Takım performansını artıracak oyuncu transferlerinin yapay zeka ile önerilmesi
+                    </p>
+                    <div class="feature-meta flex items-center justify-between">
+                      <p-chip label="v0.5" styleClass="bg-gray-100 text-xs"></p-chip>
+                      <span class="text-xs text-indigo-500 cursor-pointer hover:underline">Daha Fazla Bilgi</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Gelişmiş Maç Tahmin -->
+                  <div class="feature-item p-4 border rounded-lg hover:border-indigo-300 transition-colors">
+                    <div class="flex justify-between items-center mb-2">
+                      <div class="flex items-center">
+                        <i class="pi pi-calculator text-indigo-500 mr-2"></i>
+                        <h4 class="font-medium">Gelişmiş Maç Tahmin</h4>
+                      </div>
+                      <p-inputSwitch [disabled]="!beta.enableExperimentalFeatures"></p-inputSwitch>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2">
+                      Geçmiş maç verileri ve rakip analizlerine dayalı detaylı maç sonucu tahminleri
+                    </p>
+                    <div class="feature-meta flex items-center justify-between">
+                      <p-chip label="v0.6" styleClass="bg-gray-100 text-xs"></p-chip>
+                      <span class="text-xs text-indigo-500 cursor-pointer hover:underline">Daha Fazla Bilgi</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="beta-testing mt-6">
+                <h3 class="font-medium mb-3">Beta Testi</h3>
+                <div class="p-4 border rounded-lg bg-gray-50">
+                  <p class="text-sm text-gray-700 mb-4">
+                    Beta test programına katılın ve yeni özelliklere erken erişim elde edin.
+                    Geri bildirimleriniz ve hata raporlarınız ürünü geliştirmemize yardımcı olur.
+                  </p>
+                  
+                  <div class="tester-form grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="field">
+                      <label for="testerEmail" class="block font-medium mb-2">E-posta Adresi</label>
+                      <input id="testerEmail" type="email" pInputText placeholder="beta-tester@example.com" />
+                    </div>
+                    
+                    <div class="field">
+                      <label for="betaFeatures" class="block font-medium mb-2">İlgilendiğiniz Özellikler</label>
+                      <p-dropdown [options]="['Tümü', 'Yapay Zeka', 'Analiz', 'Arayüz']" 
+                                 placeholder="Özellik Seçin" 
+                                 [style]="{'width':'100%'}" 
+                                 appendTo="body"></p-dropdown>
+                    </div>
+                  </div>
+                  
+                  <button pButton icon="pi pi-user-plus" label="Beta Programına Katıl" class="p-button-outlined"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Geri Bildirim -->
+        <div *ngIf="activeTab === 'feedback'" class="p-fluid">
+          <div class="card-header">
+            <h2 class="text-lg font-semibold mb-4">
+              <i class="pi pi-envelope mr-2"></i> Geri Bildirim
+            </h2>
+            <p class="text-sm text-gray-600 mb-6">
+              Deneyiminizi paylaşarak ürünümüzü geliştirmemize yardımcı olun
+            </p>
+          </div>
+          
+          <div class="feedback-form">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="field">
+                <label for="feedbackName" class="block font-medium mb-2">İsim</label>
+                <input id="feedbackName" type="text" pInputText placeholder="Adınız Soyadınız" />
+              </div>
+              
+              <div class="field">
+                <label for="feedbackEmail" class="block font-medium mb-2">E-posta (isteğe bağlı)</label>
+                <input id="feedbackEmail" type="email" pInputText 
+                       [(ngModel)]="feedback.email" 
+                       (ngModelChange)="checkChanges()"
+                       placeholder="email@example.com" />
+              </div>
+            </div>
+            
+            <div class="field mt-4">
+              <label for="feedbackCategory" class="block font-medium mb-2">Kategori</label>
+              <p-dropdown [options]="['Genel Geri Bildirim', 'Hata Bildirimi', 'Özellik İsteği', 'Kullanılabilirlik', 'Performans']" 
+                         placeholder="Kategori Seçin" 
+                         [style]="{'width':'100%'}" 
+                         appendTo="body"></p-dropdown>
+            </div>
+            
+            <div class="field mt-4">
+              <label for="feedbackMessage" class="block font-medium mb-2">Geri Bildiriminiz</label>
+              <textarea id="feedbackMessage" pInputTextarea 
+                       [(ngModel)]="feedback.message" 
+                       (ngModelChange)="checkChanges()"
+                       rows="5" 
+                       placeholder="Lütfen deneyiminizi paylaşın veya bir sorun bildirin..."></textarea>
+            </div>
+            
+            <div class="field mt-4">
+              <label for="feedbackRating" class="block font-medium mb-2">Uygulamayı Değerlendirin</label>
+              <div class="rating flex gap-1">
+                <button *ngFor="let i of [1,2,3,4,5]" 
+                        class="w-10 h-10 rounded-full flex items-center justify-center text-xl hover:bg-yellow-100 transition-colors"
+                        [class.bg-yellow-100]="rating === i"
+                        [class.text-yellow-500]="rating === i">
+                  <i class="pi pi-star-fill"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="field mt-4">
+              <label class="block font-medium mb-2">Ekran Görüntüsü Ekle (isteğe bağlı)</label>
+              <div class="p-fileupload-buttonbar flex">
+                <button pButton type="button" icon="pi pi-plus" label="Dosya Ekle" class="p-button-outlined"></button>
+              </div>
+            </div>
+            
+            <div class="actions mt-6 flex gap-3">
+              <button pButton icon="pi pi-send" label="Geri Bildirim Gönder" 
+                      [disabled]="!feedback.message"></button>
+              <button pButton icon="pi pi-times" label="İptal" 
+                      class="p-button-outlined"></button>
+            </div>
+          </div>
+          
+          <p-divider></p-divider>
+          
+          <div class="previous-feedback mt-6">
+            <h3 class="font-medium mb-3">Önceki Geri Bildirimleriniz</h3>
+            <p-table [value]="[
+                      {date: '2025-04-01', category: 'Özellik İsteği', status: 'İnceleniyor'},
+                      {date: '2025-03-15', category: 'Hata Bildirimi', status: 'Çözüldü'}
+                    ]" 
+                     styleClass="p-datatable-sm" responsiveLayout="scroll">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Tarih</th>
+                  <th>Kategori</th>
+                  <th>Durum</th>
+                  <th>Detay</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-feedback>
+                <tr>
+                  <td>{{ feedback.date }}</td>
+                  <td>{{ feedback.category }}</td>
+                  <td>
+                    <p-chip [label]="feedback.status" 
+                          [styleClass]="feedback.status === 'Çözüldü' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'"></p-chip>
+                  </td>
+                  <td>
+                    <button pButton icon="pi pi-eye" 
+                           class="p-button-text p-button-sm"></button>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+        
+        <!-- Kaydet/Sıfırla Butonları -->
+        <div class="action-buttons flex flex-wrap justify-end gap-3 mt-6">
+          <button pButton icon="pi pi-undo" label="Değişiklikleri Geri Al" 
+                 class="p-button-outlined"
+                 [disabled]="!hasUnsavedChanges"
+                 (click)="resetSettings()"></button>
+          <button pButton icon="pi pi-save" label="Ayarları Kaydet" 
+                 [loading]="isSaving"
+                 [disabled]="!hasUnsavedChanges"
+                 (click)="saveSettings()"></button>
+        </div>
+      </p-card>
+    </section>
+  </div>
 </div>
 
-<!-- Sabit Kaydet Butonu -->
-<div class="fixed bottom-6 right-6 z-50">
-  <button pButton type="button" label="Kaydet" (click)="saveSettings()"
-          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition">
-  </button>
+<!-- Sabit Kaydet Butonu (Mobil için) -->
+<div *ngIf="hasUnsavedChanges" class="fixed bottom-6 right-6 z-50 md:hidden">
+  <button pButton icon="pi pi-save" 
+          (click)="saveSettings()"
+          [loading]="isSaving"
+          class="p-button-rounded p-button-lg shadow-lg"></button>
 </div>
