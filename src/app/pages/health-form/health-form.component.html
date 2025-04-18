@@ -1,97 +1,580 @@
-<!-- Genel Sağlık Durumu Tablosu (Tüm Oyuncular) -->
-<div class="bg-white mt-8 p-6 rounded-xl shadow border">
-  <h2 class="text-lg font-semibold mb-4">🏥 Tüm Oyuncuların Sağlık Durumu</h2>
-  <table class="min-w-full table-auto text-left">
-    <thead class="bg-gray-200">
-      <tr>
-        <th class="px-4 py-2 text-sm text-gray-700">Oyuncu Adı</th>
-        <th class="px-4 py-2 text-sm text-gray-700">Sağlık Durumu</th>
-        <th class="px-4 py-2 text-sm text-gray-700">Son Antrenman Durumu</th>
-        <th class="px-4 py-2 text-sm text-gray-700">Detaylar</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let player of players">
-        <td class="px-4 py-2">{{ player.name }}</td>
-        <!-- Conditional class for health status -->
-        <td class="px-4 py-2" [ngClass]="{
-          'text-green-600': player.healthStatus === 'İyi',
-          'text-red-600': player.healthStatus === 'Yaralı',
-          'text-yellow-600': player.healthStatus === 'İyileşiyor'
-        }">
-          {{ player.healthStatus }}
-        </td>
-        <td class="px-4 py-2">{{ player.lastTrainingStatus }}</td>
-        <td class="px-4 py-2">
-          <button (click)="selectPlayer(player)" class="text-blue-500 hover:underline">Detaylar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<div class="health-form-container">
+  <p-toast></p-toast>
 
-<!-- Seçilen Oyuncu Detayları -->
-<div *ngIf="selectedPlayer">
-  <div class="bg-white mt-8 p-6 rounded-xl shadow border">
-    <h3 class="text-lg font-semibold mb-4">📋 Sağlık Detayları: {{ selectedPlayer.name }}</h3>
+  <!-- Oyuncu Seçimi ve Özet Görünüm -->
+  <div class="player-selection-container p-4">
+    <h2 class="text-xl font-semibold mb-4">
+      <i class="pi pi-heart text-red-500 mr-2"></i>Futbolcu Sağlık Takibi
+    </h2>
 
-    <!-- Genel Sağlık Durumu -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="p-4">
-        <h4 class="font-medium text-gray-500">Genel Durum</h4>
-        <!-- Conditional class for health status -->
-        <p class="font-semibold" [ngClass]="{
-          'text-green-600': selectedPlayer.healthStatus === 'İyi',
-          'text-red-600': selectedPlayer.healthStatus === 'Yaralı',
-          'text-yellow-600': selectedPlayer.healthStatus === 'İyileşiyor'
-        }">
-          {{ selectedPlayer.healthStatus }}
-        </p>
-      </div>
-      <div class="p-4">
-        <h4 class="font-medium text-gray-500">Son Antrenman Durumu</h4>
-        <p class="font-semibold">{{ selectedPlayer.lastTrainingStatus }}</p>
-      </div>
-    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+      <!-- Futbolcu Kartları -->
+      <div *ngFor="let player of players"
+           class="player-card bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 cursor-pointer transform transition hover:shadow-lg hover:-translate-y-1"
+           [class.border-blue-500]="selectedPlayer?.id === player.id"
+           [class.shadow-lg]="selectedPlayer?.id === player.id"
+           (click)="selectPlayer(player)">
 
-    <!-- Sakatlık Durumu -->
-    <div class="p-6 bg-gray-100 mt-6 rounded-xl">
-      <h3 class="text-lg font-medium mb-4">📋 Sakatlık Durumu ve Yorumlar</h3>
-      <table class="min-w-full table-auto text-left">
-        <thead class="bg-gray-200">
-          <tr>
-            <th class="px-4 py-2 text-sm text-gray-700">Sakatlık Türü</th>
-            <th class="px-4 py-2 text-sm text-gray-700">Başlangıç Tarihi</th>
-            <th class="px-4 py-2 text-sm text-gray-700">İyileşme Durumu</th>
-            <th class="px-4 py-2 text-sm text-gray-700">Doktor Yorumları</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let injury of selectedPlayer.injuries">
-            <td class="px-4 py-2">{{ injury.type }}</td>
-            <td class="px-4 py-2">{{ injury.startDate | date }}</td>
-            <td class="px-4 py-2">{{ injury.recoveryStatus }}%</td>
-            <td class="px-4 py-2">{{ injury.doctorNotes }}</td>
-          </tr>
-          <tr *ngIf="selectedPlayer.injuries.length === 0">
-            <td colspan="4" class="text-center py-4 text-gray-500">Hiçbir sakatlık verisi mevcut değil.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <div class="player-card-header p-3 flex items-center gap-3 border-b">
+          <p-avatar [label]="player.name.charAt(0)"
+                    styleClass="mr-2"
+                    [style]="{'background-color': '#4F46E5', 'color': '#ffffff'}"
+                    shape="circle"
+                    size="large">
+          </p-avatar>
 
-    <!-- Tedavi Planı ve İyileşme -->
-    <div class="bg-white mt-8 p-6 rounded-xl shadow border">
-      <h3 class="text-lg font-medium mb-4">💊 Tedavi Planı ve İyileşme</h3>
+          <div>
+            <h3 class="text-base font-medium">{{player.name}}</h3>
+            <span class="text-sm text-gray-600">{{player.position}}</span>
+          </div>
 
-      <!-- Sağ tarafa hizalanan içerik -->
-      <div class="flex justify-between items-center">
-        <div>
-          <p class="font-semibold">{{ selectedPlayer.treatmentPlan[0].name }} - <span class="text-sm text-gray-500">{{ selectedPlayer.treatmentPlan[0].details }}</span></p>
-          <p class="text-sm text-gray-700">Planlanan Başlangıç: {{ selectedPlayer.treatmentPlan[0].startDate | date }}</p>
+          <div class="ml-auto">
+            <p-tag [value]="player.healthStatus"
+                   [severity]="getHealthStatusClass(player.healthStatus)">
+            </p-tag>
+          </div>
         </div>
-        <button class="mt-4 text-blue-500 hover:underline">Genel Detaylar</button>
+
+        <div class="player-card-body p-3">
+          <div class="mb-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Son Antrenman:</span>
+              <span [ngClass]="{
+                'text-green-600': player.lastTrainingStatus === 'Completed',
+                'text-red-600': player.lastTrainingStatus === 'Missed',
+                'text-blue-600': player.lastTrainingStatus === 'Light Training'
+              }">{{player.lastTrainingStatus}}</span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-sm text-gray-600">Fitness Seviyesi:</span>
+              <span class="text-sm font-medium">{{player.fitnessLevel}}%</span>
+            </div>
+            <p-progressBar [value]="player.fitnessLevel" [showValue]="false"
+                           [styleClass]="player.fitnessLevel > 80 ? 'fitness-high' : player.fitnessLevel > 60 ? 'fitness-medium' : 'fitness-low'">
+            </p-progressBar>
+          </div>
+
+          <div>
+            <span class="text-xs text-gray-600">
+              <span class="font-medium">{{player.injuries.length}}</span> sakatlık kaydı
+              <span *ngIf="hasActiveInjuriesForPlayer(player)" class="text-red-500 ml-1">
+                ({{ getActiveInjuriesCount(player) }} aktif)
+              </span>
+            </span>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- Seçilen Oyuncu Detayları -->
+    <div *ngIf="selectedPlayer" class="player-detail-container mt-4">
+      <p-tabView styleClass="health-tabs">
+        <!-- Genel Bakış Sekmesi -->
+        <p-tabPanel header="Genel Bakış">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Sol Kolon - Oyuncu Bilgileri -->
+            <div class="lg:col-span-1">
+              <!-- Fitness Durumu -->
+              <p-card styleClass="mb-4">
+                <ng-template pTemplate="header">
+                  <div class="p-3 bg-gray-50 flex justify-between items-center">
+                    <h3 class="text-lg font-medium">Fitness Durumu</h3>
+                    <p-tag [value]="selectedPlayer.healthStatus" [severity]="getHealthStatusClass(selectedPlayer.healthStatus)"></p-tag>
+                  </div>
+                </ng-template>
+
+                <div class="p-fluid">
+                  <div class="mb-3">
+                    <label for="fitnessLevel" class="block mb-2 text-sm font-medium">Fitness Seviyesi (%)</label>
+                    <p-slider [(ngModel)]="selectedPlayer.fitnessLevel" [min]="0" [max]="100" [step]="1"></p-slider>
+                    <div class="flex justify-between mt-1">
+                      <span class="text-sm">{{selectedPlayer.fitnessLevel}}%</span>
+                      <button pButton type="button" label="Güncelle" icon="pi pi-save" class="p-button-sm" (click)="updateFitnessLevel()"></button>
+                    </div>
+                  </div>
+
+                  <div class="text-sm" *ngIf="hasActiveInjuriesForPlayer(selectedPlayer)">
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">Son Antrenman Durumu:</span>
+                      <span class="font-medium">{{selectedPlayer.lastTrainingStatus}}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">Toplam Sakatlık Sayısı:</span>
+                      <span class="font-medium">{{selectedPlayer.injuries.length}}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">Aktif Sakatlık:</span>
+                      <span class="font-medium">{{ getActiveInjuriesCount(selectedPlayer) }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Tedavi Sayısı:</span>
+                      <span class="font-medium">{{selectedPlayer.treatments.length}}</span>
+                    </div>
+                  </div>
+                </div>
+              </p-card>
+
+              <!-- Aktif Sakatlıklar -->
+              <p-card *ngIf="hasActiveInjuries()" styleClass="mb-4">
+                <ng-template pTemplate="header">
+                  <div class="p-3 bg-gray-50">
+                    <h3 class="text-lg font-medium">Aktif Sakatlıklar</h3>
+                  </div>
+                </ng-template>
+
+                <div *ngFor="let injury of getActiveInjuries()" class="active-injury mb-3 pb-3 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <h4 class="text-base font-medium">{{injury.type}}</h4>
+                      <p class="text-sm text-gray-600">{{injury.location}}</p>
+                    </div>
+                    <p-tag [value]="injury.severity" [severity]="getSeverityClass(injury.severity)"></p-tag>
+                  </div>
+
+                  <div class="text-sm">
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">Başlangıç:</span>
+                      <span>{{injury.startDate | date:'dd.MM.yyyy'}}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">Beklenen İyileşme:</span>
+                      <span>{{injury.estimatedRecovery | date:'dd.MM.yyyy'}}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">Kalan Süre:</span>
+                      <span>{{calculateDaysRemaining(injury)}} gün</span>
+                    </div>
+                  </div>
+
+                  <div class="mb-2">
+                    <div class="flex justify-between items-center mb-1">
+                      <span class="text-sm text-gray-600">İyileşme Durumu:</span>
+                      <span class="text-sm font-medium">{{injury.recoveryStatus}}%</span>
+                    </div>
+                    <p-progressBar [value]="injury.recoveryStatus" [showValue]="false"></p-progressBar>
+                  </div>
+
+                  <div class="flex justify-between mt-3">
+                    <button pButton type="button" icon="pi pi-pencil" label="Düzenle" class="p-button-sm p-button-outlined" (click)="editInjury(injury)"></button>
+                    <button pButton type="button" icon="pi pi-check" label="İyileşti" class="p-button-sm p-button-success" (click)="markAsRecovered(injury)"></button>
+                  </div>
+                </div>
+              </p-card>
+
+              <!-- Aktif Tedaviler -->
+              <p-card *ngIf="hasActiveTreatments()" styleClass="mb-4">
+                <ng-template pTemplate="header">
+                  <div class="p-3 bg-gray-50">
+                    <h3 class="text-lg font-medium">Devam Eden Tedaviler</h3>
+                  </div>
+                </ng-template>
+
+                <div *ngFor="let treatment of getActiveTreatments()" class="active-treatment mb-3 pb-3 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <h4 class="text-base font-medium">{{treatment.name}}</h4>
+                      <p class="text-sm text-gray-600">{{treatment.details}}</p>
+                    </div>
+                    <p-tag [value]="treatment.status" [severity]="getTreatmentStatusClass(treatment.status)"></p-tag>
+                  </div>
+
+                  <div class="text-sm">
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">Başlangıç:</span>
+                      <span>{{treatment.startDate | date:'dd.MM.yyyy'}}</span>
+                    </div>
+                    <div *ngIf="treatment.endDate" class="flex justify-between mb-2">
+                      <span class="text-gray-600">Bitiş:</span>
+                      <span>{{treatment.endDate | date:'dd.MM.yyyy'}}</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                      <span class="text-gray-600">Sorumlu Doktor:</span>
+                      <span>{{treatment.responsibleDoctor}}</span>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-end mt-3">
+                    <button pButton type="button" icon="pi pi-pencil" label="Düzenle" class="p-button-sm p-button-outlined" (click)="editTreatment(treatment)"></button>
+                  </div>
+                </div>
+              </p-card>
+            </div>
+
+            <!-- Sağ Kolon - Grafikler ve Kayıtlar -->
+            <div class="lg:col-span-2">
+              <!-- Fitness Trend -->
+              <p-card styleClass="mb-4">
+                <ng-template pTemplate="header">
+                  <div class="p-3 bg-gray-50 flex justify-between items-center">
+                    <h3 class="text-lg font-medium">Fitness Trendi</h3>
+                    <div class="text-sm text-blue-600">Son {{selectedPlayer.fitnessHistory.length || 0}} kayıt</div>
+                  </div>
+                </ng-template>
+
+                <div *ngIf="fitnessChartData" class="chart-container">
+                  <p-chart type="line" [data]="fitnessChartData" [options]="fitnessChartOptions"></p-chart>
+                </div>
+
+                <div *ngIf="!fitnessChartData" class="text-center py-4 text-gray-500">
+                  <i class="pi pi-chart-line text-4xl mb-2"></i>
+                  <p>Yeterli veri bulunmuyor</p>
+                </div>
+              </p-card>
+
+              <!-- İyileşme Trendi -->
+              <p-card *ngIf="recoveryTrend" styleClass="mb-4">
+                <ng-template pTemplate="header">
+                  <div class="p-3 bg-gray-50 flex justify-between items-center">
+                    <h3 class="text-lg font-medium">İyileşme Trendi</h3>
+                  </div>
+                </ng-template>
+
+                <div class="chart-container">
+                  <p-chart type="line" [data]="recoveryTrend" [options]="recoveryTrendOptions"></p-chart>
+                </div>
+              </p-card>
+
+              <!-- Yeni Kayıt Ekle Butonları -->
+              <div class="flex flex-wrap gap-2 mb-4">
+                <button pButton type="button" icon="pi pi-plus" label="Sakatlık Ekle" class="p-button-outlined" (click)="addNewInjury()"></button>
+                <button pButton type="button" icon="pi pi-plus" label="Tedavi Ekle" class="p-button-outlined" (click)="addNewTreatment()"></button>
+                <button pButton type="button" icon="pi pi-plus" label="Tıbbi Kayıt Ekle" class="p-button-outlined" (click)="addNewMedicalRecord()"></button>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Sakatlık Geçmişi Sekmesi -->
+        <p-tabPanel header="Sakatlık Geçmişi">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">Sakatlık Kayıtları</h3>
+            <button pButton type="button" icon="pi pi-plus" label="Yeni Sakatlık" (click)="addNewInjury()"></button>
+          </div>
+
+          <p-table [value]="selectedPlayer.injuries" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}"
+                   responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tür</th>
+                <th>Bölge</th>
+                <th>Şiddet</th>
+                <th>Başlangıç</th>
+                <th>Tahmini İyileşme</th>
+                <th>Gerçek İyileşme</th>
+                <th>İyileşme Durumu</th>
+                <th>İşlemler</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-injury>
+              <tr>
+                <td>{{injury.type}}</td>
+                <td>{{injury.location}}</td>
+                <td>
+                  <p-tag [value]="injury.severity" [severity]="getSeverityClass(injury.severity)"></p-tag>
+                </td>
+                <td>{{injury.startDate | date:'dd.MM.yyyy'}}</td>
+                <td>{{injury.estimatedRecovery | date:'dd.MM.yyyy'}}</td>
+                <td>{{injury.actualRecovery ? (injury.actualRecovery | date:'dd.MM.yyyy') : '-'}}</td>
+                <td>
+                  <p-progressBar [value]="injury.recoveryStatus" [showValue]="true"></p-progressBar>
+                </td>
+                <td>
+                  <div class="flex gap-2">
+                    <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editInjury(injury)"></button>
+                    <button *ngIf="!isRecoveryCompleted(injury)" pButton type="button" icon="pi pi-check" class="p-button-text p-button-sm p-button-success" (click)="markAsRecovered(injury)"></button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="8" class="text-center">Sakatlık kaydı bulunamadı.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+
+        <!-- Tedavi Geçmişi Sekmesi -->
+        <p-tabPanel header="Tedavi Geçmişi">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">Tedavi Kayıtları</h3>
+            <button pButton type="button" icon="pi pi-plus" label="Yeni Tedavi" (click)="addNewTreatment()"></button>
+          </div>
+
+          <p-table [value]="selectedPlayer.treatments" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}"
+                   responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tedavi</th>
+                <th>Detaylar</th>
+                <th>Başlangıç</th>
+                <th>Bitiş</th>
+                <th>Durum</th>
+                <th>Sorumlu Doktor</th>
+                <th>İşlemler</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-treatment>
+              <tr>
+                <td>{{treatment.name}}</td>
+                <td>{{treatment.details}}</td>
+                <td>{{treatment.startDate | date:'dd.MM.yyyy'}}</td>
+                <td>{{treatment.endDate ? (treatment.endDate | date:'dd.MM.yyyy') : '-'}}</td>
+                <td>
+                  <p-tag [value]="treatment.status" [severity]="getTreatmentStatusClass(treatment.status)"></p-tag>
+                </td>
+                <td>{{treatment.responsibleDoctor}}</td>
+                <td>
+                  <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editTreatment(treatment)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7" class="text-center">Tedavi kaydı bulunamadı.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+
+        <!-- Tıbbi Kayıtlar Sekmesi -->
+        <p-tabPanel header="Tıbbi Kayıtlar">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">Tıbbi Geçmiş</h3>
+            <button pButton type="button" icon="pi pi-plus" label="Yeni Kayıt" (click)="addNewMedicalRecord()"></button>
+          </div>
+
+          <p-table [value]="selectedPlayer.medicalHistory" styleClass="p-datatable-sm" [tableStyle]="{'min-width': '50rem'}"
+                   responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Tarih</th>
+                <th>Tür</th>
+                <th>Açıklama</th>
+                <th>Doktor</th>
+                <th>İşlemler</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record>
+              <tr>
+                <td>{{record.date | date:'dd.MM.yyyy'}}</td>
+                <td>{{record.type}}</td>
+                <td>{{record.description}}</td>
+                <td>{{record.doctor}}</td>
+                <td>
+                  <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editMedicalRecord(record)"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="5" class="text-center">Tıbbi kayıt bulunamadı.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+      </p-tabView>
     </div>
   </div>
-</div>
+
+  <!-- Sakatlık Modalı -->
+  <p-dialog [(visible)]="showInjuryModal"
+            [style]="{width: '500px'}"
+            [modal]="true"
+            [closable]="true"
+            [draggable]="false"
+            [resizable]="false"
+            header="Sakatlık Kaydı">
+
+    <div class="p-fluid">
+      <div class="field mb-3">
+        <label for="injuryType" class="font-medium mb-2 block">Sakatlık Türü</label>
+        <p-dropdown [options]="injuryTypes"
+                    [(ngModel)]="currentInjury.type"
+                    [style]="{'width':'100%'}"
+                    placeholder="Sakatlık türü seçin">
+        </p-dropdown>
+      </div>
+
+      <div class="field mb-3">
+        <label for="injuryLocation" class="font-medium mb-2 block">Bölge</label>
+        <p-dropdown [options]="bodyLocations"
+                    [(ngModel)]="currentInjury.location"
+                    [style]="{'width':'100%'}"
+                    placeholder="Vücut bölgesi seçin">
+        </p-dropdown>
+      </div>
+
+      <div class="field mb-3">
+        <label for="injurySeverity" class="font-medium mb-2 block">Şiddet</label>
+        <p-dropdown [options]="severityLevels"
+                    [(ngModel)]="currentInjury.severity"
+                    [style]="{'width':'100%'}"
+                    placeholder="Şiddet seviyesi seçin">
+        </p-dropdown>
+      </div>
+
+      <div class="field mb-3">
+        <label for="injuryStartDate" class="font-medium mb-2 block">Başlangıç Tarihi</label>
+        <p-calendar [(ngModel)]="currentInjury.startDate"
+                    [showIcon]="true"
+                    dateFormat="dd.mm.yy"
+                    [style]="{'width':'100%'}">
+        </p-calendar>
+      </div>
+
+      <div class="field mb-3">
+        <label for="injuryEstimatedRecovery" class="font-medium mb-2 block">Tahmini İyileşme Tarihi</label>
+        <p-calendar [(ngModel)]="currentInjury.estimatedRecovery"
+                    [showIcon]="true"
+                    dateFormat="dd.mm.yy"
+                    [style]="{'width':'100%'}">
+        </p-calendar>
+      </div>
+
+      <div class="field mb-3">
+        <label for="injuryRecoveryStatus" class="font-medium mb-2 block">İyileşme Durumu (%)</label>
+        <p-slider [(ngModel)]="currentInjury.recoveryStatus" [min]="0" [max]="100" [step]="5"></p-slider>
+        <span class="text-sm ml-2">{{currentInjury.recoveryStatus}}%</span>
+      </div>
+
+      <div class="field mb-3">
+        <label for="injuryDoctorNotes" class="font-medium mb-2 block">Doktor Notları</label>
+        <textarea pInputTextarea
+                  [(ngModel)]="currentInjury.doctorNotes"
+                  rows="3"
+                  placeholder="Doktor notları...">
+        </textarea>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button pButton type="button" icon="pi pi-times" label="İptal" class="p-button-text" (click)="closeInjuryModal()"></button>
+      <button pButton type="button" icon="pi pi-check" label="Kaydet" (click)="saveInjury()"></button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Tedavi Modalı -->
+  <p-dialog [(visible)]="showTreatmentModal"
+            [style]="{width: '500px'}"
+            [modal]="true"
+            [closable]="true"
+            [draggable]="false"
+            [resizable]="false"
+            header="Tedavi Kaydı">
+
+    <div class="p-fluid">
+      <div class="field mb-3">
+        <label for="treatmentName" class="font-medium mb-2 block">Tedavi Adı</label>
+        <p-dropdown [options]="treatmentOptions"
+                    [(ngModel)]="currentTreatment.name"
+                    [style]="{'width':'100%'}"
+                    placeholder="Tedavi türü seçin">
+        </p-dropdown>
+      </div>
+
+      <div class="field mb-3">
+        <label for="treatmentDetails" class="font-medium mb-2 block">Detaylar</label>
+        <textarea pInputTextarea
+                  [(ngModel)]="currentTreatment.details"
+                  rows="3"
+                  placeholder="Tedavi detayları...">
+        </textarea>
+      </div>
+
+      <div class="field mb-3">
+        <label for="treatmentStartDate" class="font-medium mb-2 block">Başlangıç Tarihi</label>
+        <p-calendar [(ngModel)]="currentTreatment.startDate"
+                    [showIcon]="true"
+                    dateFormat="dd.mm.yy"
+                    [style]="{'width':'100%'}">
+        </p-calendar>
+      </div>
+
+      <div class="field mb-3">
+        <label for="treatmentEndDate" class="font-medium mb-2 block">Bitiş Tarihi (Opsiyonel)</label>
+        <p-calendar [(ngModel)]="currentTreatment.endDate"
+                    [showIcon]="true"
+                    dateFormat="dd.mm.yy"
+                    [style]="{'width':'100%'}">
+        </p-calendar>
+      </div>
+
+      <div class="field mb-3">
+        <label for="treatmentStatus" class="font-medium mb-2 block">Durum</label>
+        <p-dropdown [options]="['Planned', 'In Progress', 'Completed', 'Cancelled']"
+                    [(ngModel)]="currentTreatment.status"
+                    [style]="{'width':'100%'}"
+                    placeholder="Durum seçin">
+        </p-dropdown>
+      </div>
+
+      <div class="field mb-3">
+        <label for="treatmentDoctor" class="font-medium mb-2 block">Sorumlu Doktor</label>
+        <input pInputText
+               [(ngModel)]="currentTreatment.responsibleDoctor"
+               placeholder="Doktor adı...">
+      </div>
+
+      <div class="field mb-3">
+        <label for="treatmentRecommendedDoctor" class="font-medium mb-2 block">Öneren Doktor</label>
+        <input pInputText
+               [(ngModel)]="currentTreatment.recommendedByDoctor"
+               placeholder="Doktor adı...">
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button pButton type="button" icon="pi pi-times" label="İptal" class="p-button-text" (click)="closeTreatmentModal()"></button>
+      <button pButton type="button" icon="pi pi-check" label="Kaydet" (click)="saveTreatment()"></button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Tıbbi Kayıt Modalı -->
+  <p-dialog [(visible)]="showMedicalRecordModal"
+            [style]="{width: '500px'}"
+            [modal]="true"
+            [closable]="true"
+            [draggable]="false"
+            [resizable]="false"
+            header="Tıbbi Kayıt">
+
+    <div class="p-fluid">
+      <div class="field mb-3">
+        <label for="recordDate" class="font-medium mb-2 block">Tarih</label>
+        <p-calendar [(ngModel)]="currentMedicalRecord.date"
+                    [showIcon]="true"
+                    dateFormat="dd.mm.yy"
+                    [style]="{'width':'100%'}">
+        </p-calendar>
+      </div>
+
+      <div class="field mb-3">
+        <label for="recordType" class="font-medium mb-2 block">Tür</label>
+        <input pInputText
+               [(ngModel)]="currentMedicalRecord.type"
+               placeholder="Kayıt türü...">
+      </div>
+
+      <div class="field mb-3">
+        <label for="recordDescription" class="font-medium mb-2 block">Açıklama</label>
+        <textarea pInputTextarea
+                  [(ngModel)]="currentMedicalRecord.description"
+                  rows="3"
+                  placeholder="Açıklama...">
+        </textarea>
+      </div>
+
+      <div class="field mb-3">
+        <label for="recordDoctor" class="font-medium mb-2 block">Doktor</label>
+        <input pInputText
+               [(ngModel)]="currentMedicalRecord.doctor"
+               placeholder="Doktor adı...">
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button pButton type="button" icon="pi pi-times" label="İptal" class="p-button-text" (click)="closeMedicalRecordModal()"></button>
