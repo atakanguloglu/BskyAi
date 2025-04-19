@@ -2,25 +2,314 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-}
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
 
-.canvas-wrapper {
-  width: 100%;
-  max-width: 1400px; // isteğe göre 1200px'e çıkarılabilir
-  height: 700px;
-  margin-bottom: 1rem;
-
-  canvas {
+  .page-header {
     width: 100%;
-    height: 100%;
-    background-image: url('/assets/Tahta.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    cursor: crosshair;
+    text-align: left;
+    margin-bottom: 1.5rem;
+    color: #1e293b;
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+
+      i {
+        margin-right: 0.5rem;
+      }
+    }
   }
+
+  .control-panel {
+    width: 100%;
+    transition: all 0.3s ease;
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    .tool-group {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      label {
+        display: block;
+        font-weight: 500;
+        color: #334155;
+        font-size: 0.875rem;
+      }
+    }
+
+    .color-button {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      width: 1.75rem;
+      height: 1.75rem;
+
+      &:hover {
+        transform: scale(1.1);
+        border-color: #94a3b8;
+      }
+
+      &.selected {
+        border-color: #4f46e5;
+        transform: scale(1.1);
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+      }
+    }
+
+    .team-color {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      label {
+        font-size: 0.75rem;
+        color: #64748b;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+
+      button {
+        flex: 1;
+      }
+    }
+  }
+
+  .templates-panel {
+    width: 100%;
+    transition: all 0.3s ease;
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    .formations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      label {
+        margin-right: 0.5rem;
+        font-size: 0.875rem;
+        color: #334155;
+      }
+
+      button {
+        margin-right: 0;
+        min-width: 4rem;
+      }
+    }
+
+    .load-tactic {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+
+      select {
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+        min-width: 200px;
+      }
+    }
+  }
+
+  .canvas-container {
+    width: 100%;
+    max-width: 1050px;
+    height: 680px;
+    position: relative;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    margin-bottom: 1.5rem;
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      touch-action: none;
+    }
+  }
+
+  .help-text {
+    width: 100%;
+    max-width: 1050px;
+    text-align: left;
+    color: #64748b;
+    font-size: 0.875rem;
+    line-height: 1.5;
+
+    p {
+      margin-bottom: 0.75rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  // PrimeNG overrides
+  ::ng-deep {
+    .p-button {
+      transition: all 0.2s ease;
+
+      &.p-button-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      &.p-button-outlined {
+        border-width: 1px;
+      }
+    }
+
+    .p-selectbutton {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .p-button {
+        flex: 1;
+        min-width: 80px;
+
+        &.p-highlight {
+          background-color: #4f46e5;
+          border-color: #4f46e5;
+
+          &:hover {
+            background-color: #4338ca;
+            border-color: #4338ca;
+          }
+        }
+      }
+    }
+
+    .p-colorpicker {
+      .p-colorpicker-preview {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 0.375rem;
+      }
+    }
+
+    .p-slider {
+      height: 0.5rem;
+
+      .p-slider-handle {
+        width: 1.25rem;
+        height: 1.25rem;
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.2);
+        }
+      }
+
+      .p-slider-range {
+        background-color: #4f46e5;
+      }
+    }
+
+    .p-dialog {
+      border-radius: 0.75rem;
+      overflow: hidden;
+
+      .p-dialog-header {
+        background-color: #f1f5f9;
+        padding: 1.25rem;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .p-dialog-content {
+        padding: 1.5rem;
+      }
+
+      .p-dialog-footer {
+        padding: 1.25rem;
+        background-color: #f1f5f9;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+      }
+    }
+  }
+  // Mobile responsive
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .control-panel, .templates-panel {
+      padding: 1rem;
+      flex-direction: column;
+      gap: 1rem;
+
+      .tool-group {
+        width: 100%;
+        margin-bottom: 0;
+      }
+
+      .action-buttons {
+        width: 100%;
+
+        button {
+          flex: 1;
+          padding: 0.5rem;
+        }
+      }
+    }
+
+    .canvas-container {
+      height: 500px;
+    }
+    // Stack form buttons vertically on mobile
+    .formations {
+      flex-direction: column;
+      align-items: flex-start !important;
+
+      button {
+        width: 100%;
+        margin-right: 0 !important;
+        margin-bottom: 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .load-tactic {
+      flex-direction: column;
+      align-items: flex-start !important;
+
+      select {
+        width: 100%;
+      }
+    }
+  }
+
+
 }

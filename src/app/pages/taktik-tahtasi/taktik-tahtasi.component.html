@@ -1,17 +1,177 @@
 <div class="taktik-tahtasi-container">
-  <div class="canvas-wrapper">
-    <canvas #canvas width="1400" height="700"></canvas>
+  <p-toast></p-toast>
+
+  <!-- Ana Başlık -->
+  <div class="page-header mb-4">
+    <h2 class="text-xl font-semibold flex items-center">
+      <i class="pi pi-chart-line mr-2"></i>Taktik Tahtası
+    </h2>
   </div>
 
-  <div class="tools flex gap-2 flex-wrap justify-center mb-4">
-    <button (click)="changeColor('red')">🔴</button>
-    <button (click)="changeColor('blue')">🔵</button>
-    <button (click)="undo()">↩️ Geri Al</button>
-    <button (click)="clear()">🗑️ Temizle</button>
-    <button (click)="save()">💾 Kaydet</button>
+  <!-- Kontrol Paneli -->
+  <div class="control-panel mb-4 p-4 bg-white rounded-xl shadow flex flex-wrap gap-4 items-center">
+    <!-- Çizim Modu Seçimi -->
+    <div class="tool-group">
+      <p-selectButton [options]="drawingModeOptions"
+                      [(ngModel)]="drawingMode"
+                      (onChange)="onDrawingModeChange($event.value)"
+                      optionLabel="label">
+        <ng-template let-item>
+          <i class="{{ item.icon }} mr-2"></i>
+          <span class="hidden md:inline">{{ item.label }}</span>
+        </ng-template>
+      </p-selectButton>
+    </div>
+
+
+
+    <!-- Renk Seçimi -->
+    <div class="tool-group flex flex-col">
+      <label class="text-sm mb-1 font-medium">Renk</label>
+      <div class="flex gap-2 items-center">
+        <button *ngFor="let color of availableColors"
+                class="color-button w-6 h-6 rounded-full border-2 transition-all"
+                [style.background-color]="color"
+                [class.selected]="color === currentColor"
+                (click)="currentColor = color"
+                [attr.aria-label]="'Renk seç: ' + color">
+        </button>
+        <p-colorPicker [(ngModel)]="currentColor"></p-colorPicker>
+      </div>
+    </div>
+
+    <!-- Çizgi Kalınlığı -->
+    <div class="tool-group flex flex-col w-32">
+      <label class="text-sm mb-1 font-medium">Kalınlık: {{ currentLineWidth }}px</label>
+      <p-slider [(ngModel)]="currentLineWidth" [min]="1" [max]="10"></p-slider>
+    </div>
+
+    <!-- Takım Renkleri -->
+    <div class="tool-group flex flex-col">
+      <label class="text-sm mb-1 font-medium">Takım Renkleri</label>
+      <div class="flex gap-2">
+        <div class="team-color flex flex-col items-center">
+          <label class="text-xs text-gray-600">Ev</label>
+          <p-colorPicker [(ngModel)]="homeTeamColor"></p-colorPicker>
+        </div>
+        <div class="team-color flex flex-col items-center">
+          <label class="text-xs text-gray-600">Deplasman</label>
+          <p-colorPicker [(ngModel)]="awayTeamColor"></p-colorPicker>
+        </div>
+      </div>
+    </div>
+
+    <!-- Oyuncu Bilgileri -->
+    <div class="tool-group" *ngIf="selectedPlayer">
+      <div class="flex flex-wrap gap-2 items-center">
+        <label class="text-sm font-medium">Oyuncu:</label>
+        <div class="flex items-center gap-1">
+          <button pButton type="button" icon="pi pi-minus" class="p-button-sm p-button-rounded"
+                  (click)="updatePlayerNumber(selectedPlayer.number - 1)" title="Numara Azalt"></button>
+          <span class="font-bold min-w-[20px] text-center">{{ selectedPlayer.number }}</span>
+          <button pButton type="button" icon="pi pi-plus" class="p-button-sm p-button-rounded"
+                  (click)="updatePlayerNumber(selectedPlayer.number + 1)" title="Numara Artır"></button>
+        </div>
+        <input pInputText [(ngModel)]="selectedPlayerName" placeholder="Oyuncu Adı"
+               (blur)="updatePlayerName(selectedPlayerName)"
+               class="w-32 text-sm p-2 border rounded" />
+        <button pButton type="button" icon="pi pi-sync" class="p-button-sm p-button-rounded"
+                (click)="togglePlayerTeam()"
+                [title]="selectedPlayer.team === 'home' ? 'Deplasman Takımına Geçir' : 'Ev Sahibi Takımına Geçir'">
+        </button>
+        <button pButton type="button" icon="pi pi-copy" class="p-button-sm p-button-rounded"
+                (click)="duplicatePlayer()"
+                title="Oyuncuyu Çoğalt">
+        </button>
+        <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
+                (click)="deletePlayer()"
+                title="Oyuncuyu Sil">
+        </button>
+      </div>
+    </div>
+
+    <!-- Boşluk Dolgusu -->
+    <div class="flex-grow hidden md:block"></div>
+
+    <!-- Temel Aksiyon Butonları -->
+    <div class="action-buttons flex flex-wrap gap-2 w-full md:w-auto">
+      <button pButton type="button" icon="pi pi-arrow-left" class="p-button-outlined p-button-sm"
+              [disabled]="undoStack.length <= 1" (click)="undo()" title="Geri Al">
+        <span class="hidden md:inline">Geri Al</span>
+      </button>
+      <button pButton type="button" icon="pi pi-arrow-right" class="p-button-outlined p-button-sm"
+              [disabled]="redoStack.length === 0" (click)="redo()" title="İleri Al">
+        <span class="hidden md:inline">İleri Al</span>
+      </button>
+      <button pButton type="button" icon="pi pi-trash" class="p-button-outlined p-button-danger p-button-sm"
+              (click)="clear()" title="Temizle">
+        <span class="hidden md:inline">Temizle</span>
+      </button>
+      <button pButton type="button" icon="pi pi-save" class="p-button-outlined p-button-sm"
+              (click)="showSaveDialog = true" title="Taktiği Kaydet">
+        <span class="hidden md:inline">Kaydet</span>
+      </button>
+      <button pButton type="button" icon="pi pi-download" class="p-button-outlined p-button-sm"
+              (click)="exportAsImage()" title="PNG Olarak İndir">
+        <span class="hidden md:inline">İndir</span>
+      </button>
+    </div>
   </div>
 
-  <select [(ngModel)]="selectedTactic" (change)="loadTactic(selectedTactic)">
-    <option *ngFor="let tactic of savedTactics" [value]="tactic.name">{{ tactic.name }}</option>
-  </select>
+  <!-- Diziliş Şablonları ve Yükleme Araçları -->
+  <div class="templates-panel mb-4 p-4 bg-white rounded-xl shadow flex flex-wrap gap-4 items-center">
+    <div class="formations flex flex-wrap items-center gap-2">
+      <label class="text-sm font-medium">Diziliş Şablonları:</label>
+      <button pButton type="button" label="4-4-2" class="p-button-sm p-button-outlined"
+              (click)="loadFormation('4-4-2')"></button>
+      <button pButton type="button" label="4-3-3" class="p-button-sm p-button-outlined"
+              (click)="loadFormation('4-3-3')"></button>
+      <button pButton type="button" label="3-5-2" class="p-button-sm p-button-outlined"
+              (click)="loadFormation('3-5-2')"></button>
+      <button pButton type="button" label="5-3-2" class="p-button-sm p-button-outlined"
+              (click)="loadFormation('5-3-2')"></button>
+    </div>
+
+    <div class="flex-grow hidden md:block"></div>
+
+    <div class="load-tactic flex flex-wrap items-center gap-2 w-full md:w-auto" *ngIf="savedTactics.length > 0">
+      <label class="text-sm font-medium">Kaydedilen Taktik:</label>
+      <p-dropdown [options]="savedTactics" [(ngModel)]="selectedTactic" optionLabel="name"
+                  placeholder="Taktik seçin" class="w-full md:w-48"></p-dropdown>
+      <button pButton type="button" icon="pi pi-download" label="Yükle"
+              class="p-button-sm" (click)="selectedTactic && loadTactic(selectedTactic)" [disabled]="!selectedTactic"></button>
+      <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-danger"
+              (click)="selectedTactic && deleteTactic(selectedTactic)" [disabled]="!selectedTactic" title="Taktiği Sil"></button>
+    </div>
+  </div>
+
+  <!-- Çizim Alanı -->
+  <div class="canvas-container relative mb-4">
+    <!-- Arka Plan Canvas (Saha) -->
+    <canvas #backgroundCanvas class="absolute top-0 left-0 w-full h-full"></canvas>
+
+    <!-- Ana Çizim Canvas -->
+    <canvas #canvas class="absolute top-0 left-0 w-full h-full"></canvas>
+  </div>
+
+  <!-- Açıklamalar -->
+  <div class="help-text text-sm text-gray-600 mb-4">
+    <p><strong>İpucu:</strong> Oyuncuları sürükleyerek hareket ettirebilirsiniz. Ok ve daire çizebilir, silgi ile nesneleri silebilirsiniz.</p>
+    <p>Oyuncu eklemek için "Oyuncu" modunu seçip sahaya tıklayın, takımını değiştirmek için oyuncuyu seçip takım değiştir butonuna basın.</p>
+  </div>
+
+  <!-- Taktik Kaydetme Diyaloğu -->
+  <p-dialog header="Taktiği Kaydet" [(visible)]="showSaveDialog" [modal]="true" [style]="{width: '400px'}">
+    <div class="field">
+      <label for="tacticName" class="block mb-2 font-medium">Taktik Adı</label>
+      <input id="tacticName" type="text" pInputText [(ngModel)]="newTacticName"
+             class="w-full p-2 border rounded" placeholder="Örn: 4-3-3 Pres Taktiği" />
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button pButton type="button" label="İptal" class="p-button-text"
+              (click)="showSaveDialog = false"></button>
+      <button pButton type="button" label="Kaydet" (click)="saveTactic()"></button>
+    </ng-template>
+  </p-dialog>
 </div>
