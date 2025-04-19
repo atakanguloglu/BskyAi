@@ -2,42 +2,136 @@
   <h2 class="text-xl font-semibold mb-6">🧪 Takım Kimyası Değerlendirme</h2>
 
   <!-- Üst Bilgi Kartları -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     <p-card header="Genel Kimya Skoru" class="shadow-md rounded-xl p-4">
-      <p class="text-3xl font-bold text-green-600">{{ chemistryScore }}%</p>
+      <p class="text-3xl font-bold" [ngClass]="getChemistryScoreClass()">{{ chemistryScore }}%</p>
+      <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+        <div class="h-2.5 rounded-full" [ngClass]="getChemistryScoreClass()" [ngStyle]="{width: chemistryScore + '%'}"></div>
+      </div>
       <p class="text-xs mt-2 text-gray-600">{{ getChemistryAdvice() }}</p>
     </p-card>
     <p-card header="Dil Uyumu" class="shadow-md rounded-xl p-4">
       <p class="text-sm text-gray-800">{{ getLanguageDiversityComment() }}</p>
+      <div class="flex items-center mt-2">
+        <span class="text-xs text-gray-500 mr-2">Dil Çeşitliliği:</span>
+        <div class="flex gap-1">
+          <span *ngFor="let lang of languages" class="inline-block w-5 h-2.5 rounded-full"
+                [ngClass]="isLanguageUsed(lang) ? 'bg-blue-600' : 'bg-gray-300'"></span>
+        </div>
+      </div>
     </p-card>
     <p-card header="Bölgesel Dağılım" class="shadow-md rounded-xl p-4">
       <p class="text-sm text-gray-800">{{ getRegionDistributionComment() }}</p>
+      <div class="flex justify-between items-center mt-2">
+        <span *ngFor="let region of regions" class="inline-flex flex-col items-center justify-center">
+          <span class="text-xs text-gray-600">{{ getRegionFirstLetter(region) }}</span>
+          <div class="w-8 bg-gray-200 rounded-full mt-1">
+            <div class="h-12 rounded-full bg-indigo-500" [ngStyle]="{height: getRegionBarHeight(region)}"></div>
+          </div>
+        </span>
+      </div>
+    </p-card>
+    <p-card header="Takım Performansı" class="shadow-md rounded-xl p-4">
+      <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+          <span class="text-sm font-medium">Genel Durum</span>
+          <span class="text-lg font-bold text-green-600">İyi</span>
+        </div>
+        <div class="flex flex-col items-end">
+          <span class="text-sm font-medium">Son Ay</span>
+          <span class="text-lg font-bold text-blue-600">+12%</span>
+        </div>
+      </div>
+      <div class="flex justify-between mt-3">
+        <button pButton pRipple type="button" label="Performans Raporu"
+                class="p-button-sm p-button-text text-xs"></button>
+      </div>
     </p-card>
   </div>
 
+  <!-- Oyuncu Uyum Matriksi -->
+  <p-card header="👥 Oyuncu Uyumluluk Matrisi" class="shadow-md rounded-xl p-4 mb-6">
+    <p class="text-xs text-gray-500 mb-2">Oyuncular arasındaki kimya değerlendirmesi (0-100 arası)</p>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-xs">
+        <thead>
+          <tr>
+            <th class="py-2 px-1 bg-gray-100"></th>
+            <th *ngFor="let player of getMatrixPlayers(); let j = index" class="py-2 px-1 bg-gray-100 font-medium">
+              {{ getPlayerFirstName(player.name) }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of getMatrixPlayers(); let i = index">
+            <td class="py-2 px-1 font-medium bg-gray-100">{{ getPlayerFirstName(player.name) }}</td>
+            <td *ngFor="let p of getMatrixPlayers(); let j = index" class="py-2 px-1 text-center">
+              <span *ngIf="i !== j" [ngClass]="getCompatibilityClass(i, j)" class="py-1 px-2 rounded-full text-white">
+                {{ getPlayerCompatibility(i, j) }}
+              </span>
+              <span *ngIf="i === j" class="text-gray-300">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-card>
+
   <!-- Grafikler -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <p-card header="📌 Bölgelere Göre Dağılım" class="shadow-md rounded-xl p-4">
+    <p-card header="📍 Bölgelere Göre Dağılım" class="shadow-md rounded-xl p-4">
       <p-chart type="pie" [data]="regionChartData" [options]="chartOptions"></p-chart>
     </p-card>
     <p-card header="🗣️ Dillerin Dağılımı" class="shadow-md rounded-xl p-4">
       <p-chart type="doughnut" [data]="languageChartData" [options]="chartOptions"></p-chart>
     </p-card>
-    <p-card header="📍 Pozisyon Dağılımı" class="shadow-md rounded-xl p-4">
+    <p-card header="📊 Pozisyon Dağılımı" class="shadow-md rounded-xl p-4">
       <p-chart type="bar" [data]="positionChartData" [options]="chartOptions"></p-chart>
     </p-card>
   </div>
 
-  <!-- Oyuncu Tablosu -->
+  <!-- Yüksek Uyumlu Oyuncular -->
+  <p-card header="🌟 Yüksek Uyumlu Oyuncular" class="shadow-md rounded-xl p-4 mb-8">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div *ngFor="let player of getTopPlayers(6)" class="bg-white border rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-3"></div>
+        <div class="p-3">
+          <div class="font-medium text-gray-800">{{ player.name }}</div>
+          <div class="text-xs text-gray-500">{{ player.position }} | {{ player.country }}</div>
+          <div class="mt-2 flex justify-between items-center">
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
+                  [ngClass]="getPlayerChemistryClass(player)">
+              Uyum: {{ player.chemistry }}%
+            </span>
+            <button pButton pRipple type="button" icon="pi pi-info-circle"
+                    class="p-button-rounded p-button-text p-button-sm"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Oyuncu Listesi Tablosu -->
   <div class="bg-white rounded-xl border shadow p-4 mb-10">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-lg font-medium">📋 Oyuncu Listesi</h3>
       <div class="flex gap-2 items-center">
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+            <i class="pi pi-search text-gray-400"></i>
+          </span>
+          <input type="text" placeholder="Oyuncu ara..."
+                 class="pl-8 pr-4 py-1.5 text-xs border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
         <p-dropdown [options]="positions"
                     [(ngModel)]="selectedPositionFilter"
                     (onChange)="filterPlayers()"
-                    placeholder="Pozisyona Göre Filtrele"
-                    class="w-48 text-xs">
+                    placeholder="Pozisyon"
+                    class="w-32 text-xs">
+        </p-dropdown>
+        <p-dropdown [options]="regions"
+                    placeholder="Bölge"
+                    class="w-32 text-xs">
         </p-dropdown>
         <button class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600"
                 (click)="resetFilters()">
@@ -54,6 +148,8 @@
             <th class="p-2">Dil</th>
             <th class="p-2">Pozisyon</th>
             <th class="p-2">Bölge</th>
+            <th class="p-2">Uyum</th>
+            <th class="p-2">İşlemler</th>
           </tr>
         </thead>
         <tbody>
@@ -63,9 +159,25 @@
             <td class="p-2">{{ player.language }}</td>
             <td class="p-2">{{ player.position }}</td>
             <td class="p-2">{{ player.region }}</td>
+            <td class="p-2">
+              <div class="inline-flex items-center">
+                <div class="w-16 bg-gray-200 rounded-full h-1.5 mr-2">
+                  <div class="h-1.5 rounded-full"
+                       [style.width.%]="getPlayerChemistryValue(player)"
+                       [ngClass]="getPlayerProgressBarClass(player)"></div>
+                </div>
+                <span>{{ getPlayerChemistryValue(player) }}%</span>
+              </div>
+            </td>
+            <td class="p-2">
+              <button pButton pRipple type="button" icon="pi pi-user-edit"
+                      class="p-button-rounded p-button-text p-button-sm"></button>
+              <button pButton pRipple type="button" icon="pi pi-chart-line"
+                      class="p-button-rounded p-button-text p-button-sm"></button>
+            </td>
           </tr>
           <tr *ngIf="filteredPlayers.length === 0">
-            <td colspan="5" class="text-center py-4 text-gray-400">Hiçbir oyuncu eşleşmedi.</td>
+            <td colspan="7" class="text-center py-4 text-gray-400">Hiçbir oyuncu eşleşmedi.</td>
           </tr>
         </tbody>
       </table>
@@ -74,41 +186,133 @@
 
   <!-- Sahada Pozisyon Kimyası Görselleştirme -->
   <div class="relative w-full h-[520px] mt-12 mb-10 rounded-xl overflow-hidden shadow-xl border border-gray-300 bg-green-600 bg-[url('/assets/images/green-field.png')] bg-cover bg-center">
+    <div class="absolute bottom-4 right-4 bg-white p-2 rounded-lg shadow-md text-xs">
+      <div class="font-semibold mb-1">Uyum Düzeyi</div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-3 h-3 rounded-full bg-green-500"></span>
+        <span>Yüksek</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-3 h-3 rounded-full bg-yellow-500"></span>
+        <span>Orta</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-3 h-3 rounded-full bg-red-500"></span>
+        <span>Düşük</span>
+      </div>
+    </div>
+
     <ng-container *ngFor="let pos of positions">
-      <div class="absolute px-4 py-2 rounded-full shadow-lg text-white text-xs font-semibold uppercase tracking-wider cursor-pointer transition-all duration-300 hover:scale-105"
-           [ngStyle]="{
-             top: positionMap[pos].top,
-             left: positionMap[pos].left,
-             transform: 'translate(-50%, -50%)',
-             'background-color': positionColors[pos] || '#16a34a'
-           }"
+      <div class="absolute px-4 py-2 rounded-full shadow-lg text-white text-xs font-semibold uppercase tracking-wider cursor-pointer transition-all duration-300 hover:scale-110"
+           [ngStyle]="getPositionStyle(pos)"
            (click)="openPositionModal(pos, $event)">
         <div class="text-center leading-snug">
           <span class="block text-[11px] font-bold">{{ getPositionCount(pos) }}x</span>
           {{ pos }}
         </div>
+        <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
+          <div class="inline-flex gap-1">
+            <span *ngFor="let i of getDotArray()" class="block w-1 h-1 rounded-full bg-white opacity-80"></span>
+          </div>
+        </div>
       </div>
     </ng-container>
   </div>
+
+  <!-- Takım Kimyası AI Tavsiyesi -->
+  <p-card class="shadow-md rounded-xl p-4 mb-10">
+    <ng-template pTemplate="header">
+      <div class="flex justify-between items-center p-3">
+        <h3 class="text-lg font-medium">🤖 Yapay Zeka Tavsiyeleri</h3>
+        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">AI Destekli</span>
+      </div>
+    </ng-template>
+
+    <p class="text-sm text-gray-800 mb-4">
+      Takım kimyasını artırmak için şu adımlar önerilir:
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="border rounded-lg p-3 bg-blue-50">
+        <h4 class="font-medium text-blue-700 mb-2">🙋‍♂️ Oyuncu Önerileri</h4>
+        <ul class="text-xs space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <i class="pi pi-check-circle text-green-500 mr-1 mt-0.5"></i>
+            <span>Aynı dili konuşan yeni bir orta saha oyuncusu transfer edilebilir</span>
+          </li>
+          <li class="flex items-start">
+            <i class="pi pi-check-circle text-green-500 mr-1 mt-0.5"></i>
+            <span>Fransızca konuşan bir forvet oyuncusu kadro uyumunu artırabilir</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="border rounded-lg p-3 bg-purple-50">
+        <h4 class="font-medium text-purple-700 mb-2">🤝 Sosyal Aktiviteler</h4>
+        <ul class="text-xs space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <i class="pi pi-check-circle text-green-500 mr-1 mt-0.5"></i>
+            <span>Takım kültürü etkinlikleri düzenleyerek iletişim bariyerlerini azaltın</span>
+          </li>
+          <li class="flex items-start">
+            <i class="pi pi-check-circle text-green-500 mr-1 mt-0.5"></i>
+            <span>Dil kursları organize ederek oyuncular arasındaki iletişimi güçlendirin</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="border rounded-lg p-3 bg-indigo-50">
+        <h4 class="font-medium text-indigo-700 mb-2">⚽ Antrenman Planlaması</h4>
+        <ul class="text-xs space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <i class="pi pi-check-circle text-green-500 mr-1 mt-0.5"></i>
+            <span>Forvet ve orta saha oyuncuları arasında özel antrenmanlar planlanabilir</span>
+          </li>
+          <li class="flex items-start">
+            <i class="pi pi-check-circle text-green-500 mr-1 mt-0.5"></i>
+            <span>Defans hattı için bölgesel iş birliğini artıracak taktiksel çalışmalar eklenebilir</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </p-card>
 
   <!-- Modal (Pozisyon Oyuncuları) -->
   <p-dialog header="{{ selectedPosition }} Oyuncuları"
             [(visible)]="modalVisible"
             [modal]="true"
             [closable]="true"
-            [style]="{ width: '400px', top: modalPosition.top, left: modalPosition.left, position: 'fixed' }">
+            [style]="{ width: '450px', top: modalPosition.top, left: modalPosition.left, position: 'fixed' }">
     <ng-container *ngIf="selectedPositionPlayers.length > 0; else noPlayers">
-      <div *ngFor="let player of selectedPositionPlayers" class="mb-3 p-3 border rounded shadow bg-white text-sm">
-        <div class="font-medium">{{ player.name }}</div>
-        <div class="text-xs text-gray-500">{{ player.country }} | {{ player.language }} | {{ player.region }}</div>
-        <button class="mt-2 text-xs text-blue-600 hover:underline">
-          Oyuncu Detayı →
-        </button>
+      <div *ngFor="let player of selectedPositionPlayers" class="mb-3 p-3 border rounded shadow-sm bg-white text-sm hover:bg-gray-50 transition-all">
+        <div class="flex justify-between">
+          <span class="font-medium">{{ player.name }}</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                [ngClass]="getPlayerModalClass(player)">
+            {{ getPlayerChemistryValue(player) }}%
+          </span>
+        </div>
+        <div class="text-xs text-gray-500 mt-1">{{ player.country }} | {{ player.language }} | {{ player.region }}</div>
+        <div class="flex justify-between mt-2">
+          <button pButton type="button" label="Detaylar" icon="pi pi-user"
+                  class="p-button-text p-button-sm"></button>
+          <button pButton type="button" label="Konuşma Arkadaşları" icon="pi pi-users"
+                  class="p-button-text p-button-sm"></button>
+        </div>
       </div>
     </ng-container>
 
     <ng-template #noPlayers>
       <p class="text-gray-500">Bu pozisyonda oyuncu yok.</p>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-between">
+        <button pButton type="button" label="Kapat" icon="pi pi-times"
+                class="p-button-text p-button-sm" (click)="closeModal()"></button>
+        <button pButton type="button" label="Oyuncu Ekle" icon="pi pi-plus"
+                class="p-button-sm"></button>
+      </div>
     </ng-template>
   </p-dialog>
 
